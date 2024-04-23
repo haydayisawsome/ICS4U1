@@ -28,16 +28,18 @@ Create an arraylist of 20 random numbers called list using numbers method.
 Create an arraylist of strings called names and fill it with 6 different names of your choice.
 Call all above mentioned methods using list and names arraylists.
 Print your outputs for each case.
- 
+*/
 
 import java.util.*;
 class myArrayLists{
-    public Arraylist<Integer> numbers(){
-
+    public ArrayList<Integer> numbers(){
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for (int i = 0; i < 6; i++){
+            list.set(i,(int)(Math.random()*20));
+        }
+        return list;
     }
-    public Arraylist<Integer> search(ArrayList<Integer> list, int item){
+    public ArrayList<Integer> search(ArrayList<Integer> list, int item){
         
     }
 }
-
-*/
