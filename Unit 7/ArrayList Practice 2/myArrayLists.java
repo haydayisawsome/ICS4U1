@@ -1,9 +1,4 @@
 /*
-Part 1
-Write a class called myArrayLists that includes the following methods:
-
-A method called numbers that creates an arraylist of integers, fills it with random integers between 1 and 20 inclusive and returns it.
-
 A method called search that accepts an arraylist of integers and integer item, then searches for the item in the arraylist if the item is found,  it  returns true, otherwise it returns false.
 
 A method called sort that accepts an arraylist of integers, sort the arraylist in ascending order and returns the sorted arraylist.
@@ -32,14 +27,21 @@ Print your outputs for each case.
 
 import java.util.*;
 class myArrayLists{
-    public ArrayList<Integer> numbers(){
+    public ArrayList<Integer> numbers(int size){
         ArrayList<Integer> list = new ArrayList<Integer>();
-        for (int i = 0; i < 6; i++){
+        for (int i = 0; i < size; i++){
             list.set(i,(int)(Math.random()*20));
         }
         return list;
     }
-    public ArrayList<Integer> search(ArrayList<Integer> list, int item){
-        
+    public boolean search(ArrayList<Integer> list, int item){
+        for (int i = 0;i < list.size();i++){
+            if (list.get(i) == item){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
     }
 }
