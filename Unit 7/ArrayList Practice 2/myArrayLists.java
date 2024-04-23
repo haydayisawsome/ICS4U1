@@ -28,7 +28,7 @@ Create an arraylist of 20 random numbers called list using numbers method.
 Create an arraylist of strings called names and fill it with 6 different names of your choice.
 Call all above mentioned methods using list and names arraylists.
 Print your outputs for each case.
- */
+ 
 
 import java.util.*;
 class myArrayLists{
@@ -39,3 +39,5 @@ class myArrayLists{
         
     }
 }
+
+*/

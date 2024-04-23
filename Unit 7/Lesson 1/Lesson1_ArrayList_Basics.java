@@ -12,7 +12,7 @@ public class Lesson1_ArrayList_Basics{
         //Arraylist of integers
         ArrayList<Integer>num = new ArrayList<Integer>();
         //<Integer> is not mandatory for the second time
-        ArrayList<Integer>numAlt = new ArrayList<>();
+        //ArrayList<Integer>numAlt = new ArrayList<>();
         
         //filling up the arraylist using add method
         num.add(2);
