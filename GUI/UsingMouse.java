@@ -16,6 +16,7 @@ public class UsingMouse extends Frame implements MouseListener{
     //All of the methods in Frame are instance methods
     //thus you do not need to make an object
     public UsingMouse(){
+        addMouseListener(this); //this tells the Mouse Listener to use the methods below
         setSize(300,300);
         setVisible(true);
     }
@@ -25,13 +26,17 @@ public class UsingMouse extends Frame implements MouseListener{
         //this prints onto the defult console, not the frame
     }
     public void mouseEntered(MouseEvent e){
-
+        Graphics g = getGraphics();
+        g.drawString("Mouse Entered", 100, 100);
     }
     public void mouseClicked(MouseEvent e){
-
+        Graphics g = getGraphics();
+        g.setColor(Color.red);
+        g.fillRect(e.getX(),e.getY(),80,40);
     }
     public void mouseExited(MouseEvent e){
-
+        Graphics g = getGraphics();
+        g.drawString("Mouse Exited", 100, 80);
     }
     public void mousePressed(MouseEvent e){
 
