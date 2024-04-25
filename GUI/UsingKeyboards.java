@@ -41,7 +41,7 @@ public class UsingKeyboards extends JPanel implements ActionListener, KeyListene
         //g.setColor(Color.blue);
         //g.fillOval(x,y,d,d);
 
-        ImageIcon image = new ImageIcon("Airplane.png");
+        ImageIcon image = new ImageIcon("C:\\Users\\349694009\\Downloads\\ICS4U1\\GUI\\Airplane.png");
         image.paintIcon(this,g,x,y);
     }
     public UsingKeyboards(){
@@ -53,19 +53,19 @@ public class UsingKeyboards extends JPanel implements ActionListener, KeyListene
         x = velX + x;
         y = velY + y;
         repaint();
-        if(x==0){
+        if(x<=0){
             velX = 0;
             x = 0;
         }
-        if (x > 450){
+        if (x >= 450){
             velX = 0;
             x = 450;
         }
-        if (y == 0){
+        if (y <= 0){
             velY = 0;
             y = 0;
         }
-        if (y > 350){
+        if (y >= 350){
             velY = 0;
             y = 350;
         }
