@@ -10,6 +10,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class UsingKeyboards extends JPanel implements ActionListener, KeyListener{
+    //extends JPanel enables you to use all methods of the class JPanel
+    //ActionListener must be overrided as they are abstract methods
+
     //initial position of the ball
     int x = 0;
     int y = 0;
@@ -34,8 +37,12 @@ public class UsingKeyboards extends JPanel implements ActionListener, KeyListene
     public void paint(Graphics g){
         super.paint(g);
         //super allows you to access classes from the higher heirachy
-        g.setColor(Color.blue);
-        g.fillOval(x,y,d,d);
+        //without the line above, it will not repaint the background
+        //g.setColor(Color.blue);
+        //g.fillOval(x,y,d,d);
+
+        ImageIcon image = new ImageIcon("Airplane.png");
+        image.paintIcon(this,g,x,y);
     }
     public UsingKeyboards(){
         time.start();
@@ -46,6 +53,22 @@ public class UsingKeyboards extends JPanel implements ActionListener, KeyListene
         x = velX + x;
         y = velY + y;
         repaint();
+        if(x==0){
+            velX = 0;
+            x = 0;
+        }
+        if (x > 450){
+            velX = 0;
+            x = 450;
+        }
+        if (y == 0){
+            velY = 0;
+            y = 0;
+        }
+        if (y > 350){
+            velY = 0;
+            y = 350;
+        }
     }
     public void keyPressed(KeyEvent e){
         int c = e.getKeyCode();
@@ -59,11 +82,11 @@ public class UsingKeyboards extends JPanel implements ActionListener, KeyListene
         }
         if (c == KeyEvent.VK_UP){
             velX = 0;
-            velY = 1;
+            velY = -1;
         }
         if (c == KeyEvent.VK_DOWN){
             velX = 0;
-            velY = -1;
+            velY = 1;
         }
     }
     public void keyReleased(KeyEvent e){
