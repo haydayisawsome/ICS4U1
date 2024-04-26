@@ -4,12 +4,24 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Main extends JFrame implements ActionListener, KeyListener, MouseListener{
+public class Main extends Frame implements ActionListener{
     public static void main (String[]args){
-
+        Main m = new Main();
+        m.setSize(500,400);
+        m.setVisible(true);
     }
     public Main(){
+        //title screen
+        //game
+        //die screen
 
+        Button start = new Button("START");
+        start.setBounds(10, 10, 10, 10);
+        add(start);
+    }
+
+    public void graphics (Graphics g){
+        
     }
 
     public void actionPerformed(ActionEvent e){
@@ -25,10 +37,26 @@ public class Main extends JFrame implements ActionListener, KeyListener, MouseLi
     public void mouseReleased(MouseEvent e){
 
     }
-    public void mouseExcited(MouseEvent e){
+    public void mouseExited(MouseEvent e){
 
     }
     public void mouseEntered(MouseEvent e){
+
+    }
+    public void mouseMoved(MouseEvent e){
+
+    }
+    public void mouseDragged(MouseEvent e){
+
+    }
+
+    public void keyPressed(KeyEvent e){
+
+    }
+    public void keyReleased(KeyEvent e){
+
+    }
+    public void keyTyped(KeyEvent e){
 
     }
 }
