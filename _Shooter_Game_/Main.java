@@ -14,9 +14,9 @@ public class Main extends Frame implements ActionListener{
         //title screen
         //game
         //die screen
-
+        setLayout(null);
         Button start = new Button("START");
-        start.setBounds(10, 10, 10, 10);
+        start.setBounds(30,30,30,30);
         add(start);
     }
 
