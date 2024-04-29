@@ -82,4 +82,13 @@
          }
          return revList;
      }
+     public static ArrayList<Integer> shuffle(ArrayList<Integer>list){
+        for (int i =0; i<list.size();i++){
+            int temp = list.get(i);
+            int j = (int)Math.random()*list.size();
+            list.set(i,list.get(j));
+            list.set(j,temp);
+        }
+        return list;
+     }
  }
