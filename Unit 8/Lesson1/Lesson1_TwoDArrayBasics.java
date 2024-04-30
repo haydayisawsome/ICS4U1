@@ -1,15 +1,9 @@
-/**
- * Author:  Isaac Man
- * Date:    April 30, 2024
- * Subject: Two Dimensional Array Basics
- */
-
-public class Lesson1_TwoDArrayBasics{
+class Lesson1_TwoDArrayBasics {
     public static void main(String[]args){
         //A two d array is an array of one d arrays
 
         //how to declare a two d array
-        int[][] array = new int[3][4]; 
+        int[][] a = new int[3][4]; 
         //3 is number of rows
         //4 is number of columns
 
@@ -24,26 +18,31 @@ public class Lesson1_TwoDArrayBasics{
         //printing a 2D array using a nested for loop
         for (int i = 0;i<4;i++){
             for (int j = 0;j<3;j++){
-                System.out.println(b[i][j] + "  ");
+                System.out.print(b[i][j] + "  ");
             }
+            System.out.println();
         }
 
         print(b);
-
+        System.out.println();
         int[][]c = {{1,2,3,4},{5,6,7,8},{9,0,9,8},{7,6,5,4}};
         System.out.println();
         print(c);
 
         //finding the number of rows
         System.out.println("Number of rows = " + c.length);
-        
+        //number of rows = c.length
+        //number of columns = c[0].length
+        System.out.println("Number of columns" + c[0].length);
     }
     //write a method that prints a 2D array of integer
-    public static void print(int[][] array){
+    public static void print(int[][] n){
         for(int i = 0;i<n.length;i++){
-            for (int j = 0;j<a[].length;j++){
-                System.out.println(a[i][j]);
+            for (int j = 0;j < n[i].length;j++){
+                System.out.print(n[i][j] + "  ");
             }
+            System.out.println();
         }
     }
 }
+
