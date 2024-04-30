@@ -11,6 +11,8 @@ public class Main extends Frame implements ActionListener, WindowListener{
 
     static final int topFrameStartPos = 29;
     static final int leftFrameStartPos = 6;
+
+    Button start;
     public static void main (String[]args){
         Main m = new Main();
         m.setSize(frameWidth + borderThickness*3 + leftFrameStartPos,frameHeight + borderThickness*3 + topFrameStartPos);
@@ -24,9 +26,10 @@ public class Main extends Frame implements ActionListener, WindowListener{
         int startButtonWidth = 200;
         int startButtonHeight = 80;
         event = "title screen";
-        Button start = new Button("START");
+        start = new Button("START");
         start.setBounds(frameWidth/2-startButtonWidth/2,500-startButtonHeight/2,startButtonWidth,startButtonHeight);
         add(start);
+        start.addActionListener(this);
 
         //game
         //die screen
@@ -56,16 +59,29 @@ public class Main extends Frame implements ActionListener, WindowListener{
             g.setColor(Color.BLACK);
             g2.drawLine(frameWidth/2-400+90,350,400,500);
         }
+        else if (event.equals("game")){
+            g.setColor(Color.CYAN);
+            g.fillRect(leftFrameStartPos,topFrameStartPos,frameWidth + borderThickness*2,frameHeight + borderThickness*2);
+        }
     }
 
-    public void actionPerformed(ActionEvent e){}
+    public void actionPerformed(ActionEvent e){
+        String s = e.getActionCommand();
+        if (s.equals("START")){
+            event = "game";
+            repaint();
+            start.setVisible(false);
+        }
+    }
 
     public void mouseClicked(MouseEvent e){}
     public void mousePressed(MouseEvent e){}
     public void mouseReleased(MouseEvent e){}
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
-    public void mouseMoved(MouseEvent e){}
+    public void mouseMoved(MouseEvent e){
+        //get mouse location
+    }
     public void mouseDragged(MouseEvent e){}
 
     public void keyPressed(KeyEvent e){}

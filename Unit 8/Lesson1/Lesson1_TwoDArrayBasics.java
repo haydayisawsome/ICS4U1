@@ -1,4 +1,4 @@
-class Lesson1_TwoDArrayBasics {
+class Lesson1_TwoDArrayBasics{
     public static void main(String[]args){
         //A two d array is an array of one d arrays
 
@@ -34,9 +34,31 @@ class Lesson1_TwoDArrayBasics {
         //number of rows = c.length
         //number of columns = c[0].length
         System.out.println("Number of columns" + c[0].length);
+
+        //printing a 2d array using enhanced for loop
+        String[][] name = {{"Daniel","Jacob","Krish","Edward"},{"Isaac","Steven","Ali","Zoran"}};
+        for (String[] anyname1: name){
+            for (String anyname2: anyname1){
+                System.out.println(anyname2);
+            }
+            System.out.println();
+        }
+
+        //jagged 2D array: Number of elements at each row is different
+        //write a method that prints a 2D array of integer
+        double[][] d = {{1.1,1.2,4.9},{1,3},{1}};
+        print2D(d);
     }
-    //write a method that prints a 2D array of integer
+    
     public static void print(int[][] n){
+        for(int i = 0;i<n.length;i++){
+            for (int j = 0;j < n[i].length;j++){
+                System.out.print(n[i][j] + "  ");
+            }
+            System.out.println();
+        }
+    }
+    public static void print2D(double[][] n){
         for(int i = 0;i<n.length;i++){
             for (int j = 0;j < n[i].length;j++){
                 System.out.print(n[i][j] + "  ");
