@@ -79,7 +79,7 @@ public class Main extends Frame implements ActionListener, WindowListener{
     public void mouseReleased(MouseEvent e){}
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
-    public void mouseMoved(MouseEvent e){
+    public void mouseMoved(MouseEvent e){}
         //get mouse location
     }
     public void mouseDragged(MouseEvent e){}
