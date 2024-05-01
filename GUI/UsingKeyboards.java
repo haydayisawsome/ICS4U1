@@ -41,7 +41,7 @@ public class UsingKeyboards extends JPanel implements ActionListener, KeyListene
         //g.setColor(Color.blue);
         //g.fillOval(x,y,d,d);
 
-        ImageIcon image = new ImageIcon("C:\\Users\\349694009\\Downloads\\ICS4U1\\GUI\\Airplane.png");
+        ImageIcon image = new ImageIcon("C:\\Users\\isaac\\Downloads\\ICS4U1\\ICS4U1\\GUI\\Airplane.png");
         image.paintIcon(this,g,x,y);
     }
     public UsingKeyboards(){

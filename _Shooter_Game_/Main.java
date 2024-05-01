@@ -2,8 +2,9 @@ package _Shooter_Game_;
 
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
-public class Main extends Frame implements ActionListener, WindowListener{
+public class Main extends Frame implements ActionListener, WindowListener, MouseListener, KeyListener{
     static String event = "";
     static int frameWidth = 1000;
     static int frameHeight = 700;
@@ -13,6 +14,21 @@ public class Main extends Frame implements ActionListener, WindowListener{
     static final int leftFrameStartPos = 6;
 
     Button start;
+
+    PointerInfo a = MouseInfo.getPointerInfo();
+    Point b;
+    int x;
+    int y;
+
+    int playerPosX = 100 + leftFrameStartPos; //starting position
+    int playerPosY = frameHeight / 2 + topFrameStartPos; //starting position
+    int playerDiameter = 100;
+    int playerSpeed = 5;
+    int playerVelX = 0;
+    int playerVelY = 0;
+
+    Timer timer;
+
     public static void main (String[]args){
         Main m = new Main();
         m.setSize(frameWidth + borderThickness*3 + leftFrameStartPos,frameHeight + borderThickness*3 + topFrameStartPos);
@@ -21,7 +37,7 @@ public class Main extends Frame implements ActionListener, WindowListener{
     }
     public Main(){
         setLayout(null);
-        
+        timer = new Timer(20, this); // 5 milliseconds delay
         //title screen
         int startButtonWidth = 200;
         int startButtonHeight = 80;
@@ -30,7 +46,12 @@ public class Main extends Frame implements ActionListener, WindowListener{
         start.setBounds(frameWidth/2-startButtonWidth/2,500-startButtonHeight/2,startButtonWidth,startButtonHeight);
         add(start);
         start.addActionListener(this);
-
+        addKeyListener(this);
+        requestFocus();
+        setFocusable(true);
+        timer.start(); // Start the timer
+        timer.addActionListener(this);
+        timer.setRepeats(true);
         //game
         //die screen
     }
@@ -62,15 +83,45 @@ public class Main extends Frame implements ActionListener, WindowListener{
         else if (event.equals("game")){
             g.setColor(Color.CYAN);
             g.fillRect(leftFrameStartPos,topFrameStartPos,frameWidth + borderThickness*2,frameHeight + borderThickness*2);
+            
+            g.setColor(Color.BLACK);
+            g.fillOval(playerPosX - playerDiameter/2, playerPosY - playerDiameter/2, playerDiameter, playerDiameter);
+            g.setColor(Color.CYAN);
+            g.fillOval(playerPosX - playerDiameter/2 + 10, playerPosY - playerDiameter/2 +10, playerDiameter-20, playerDiameter-20);
         }
     }
 
     public void actionPerformed(ActionEvent e){
-        String s = e.getActionCommand();
-        if (s.equals("START")){
-            event = "game";
-            repaint();
-            start.setVisible(false);
+        if (e.getSource() == timer) {
+            // Update paint only if the event is from the timer and the game has started
+            if (event.equals("game")) {
+                // Update player position based on velocity
+                playerPosX += playerVelX;
+                playerPosY += playerVelY;
+    
+                // Check boundaries
+                if (playerPosX <= 0) {
+                    playerPosX = 0;
+                } 
+                else if (playerPosX >= leftFrameStartPos + frameWidth - playerDiameter) {
+                    playerPosX = leftFrameStartPos + frameWidth - playerDiameter;
+                }
+                else if (playerPosY <= 0) {
+                    playerPosY = 0;
+                } 
+                else if (playerPosY >= topFrameStartPos + frameHeight - playerDiameter) {
+                    playerPosY = topFrameStartPos + frameHeight - playerDiameter;
+                }
+                repaint();
+            }
+        }
+        else {
+            // Handle other action events
+            String s = e.getActionCommand();
+            if (s.equals("START")) {
+                event = "game";
+                start.setVisible(false);
+            }
         }
     }
 
@@ -81,11 +132,36 @@ public class Main extends Frame implements ActionListener, WindowListener{
     public void mouseEntered(MouseEvent e){}
     public void mouseMoved(MouseEvent e){}
         //get mouse location
+        b = a.getLocation();
+        x = (int) b.getX();
+        y = (int) b.getY();
     }
     public void mouseDragged(MouseEvent e){}
 
-    public void keyPressed(KeyEvent e){}
-    public void keyReleased(KeyEvent e){}
+    public void keyPressed(KeyEvent e){
+        int c = e.getKeyCode();
+        if (c == KeyEvent.VK_D){
+            playerVelX = playerSpeed;
+        }
+        else if (c == KeyEvent.VK_A){
+            playerVelX = -playerSpeed;
+        }
+        else if (c == KeyEvent.VK_W){
+            playerVelY = -playerSpeed;
+        }
+        else if (c == KeyEvent.VK_S){
+            playerVelY = playerSpeed;
+        }
+    }
+    public void keyReleased(KeyEvent e){
+        int c = e.getKeyCode();
+        if (c == KeyEvent.VK_D || c == KeyEvent.VK_A){
+            playerVelX = 0;
+        }
+        if (c == KeyEvent.VK_W || c == KeyEvent.VK_S){
+            playerVelY = 0;
+        }
+    }
     public void keyTyped(KeyEvent e){}
     
     public void windowClosing(WindowEvent e) {
