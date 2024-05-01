@@ -3,6 +3,7 @@ package _Shooter_Game_;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.awt.geom.*;
 
 public class Main extends Frame implements ActionListener, WindowListener, MouseListener, KeyListener{
     static String event = "";
@@ -10,7 +11,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     static int frameHeight = 700;
     static int borderThickness = 5;
 
-    static final int topFrameStartPos = 29;
+    static final int topFrameStartPos = 29; 
     static final int leftFrameStartPos = 6;
 
     Button start;
@@ -20,14 +21,16 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     int x;
     int y;
 
-    int playerPosX = 100 + leftFrameStartPos; //starting position
-    int playerPosY = frameHeight / 2 + topFrameStartPos; //starting position
     int playerDiameter = 100;
-    int playerSpeed = 5;
+    int playerSpeed = 3;
     int playerVelX = 0;
     int playerVelY = 0;
+    int playerPosX = 100 + leftFrameStartPos - playerDiameter/2; //starting position
+    int playerPosY = frameHeight + playerDiameter/2; //starting position
 
     Timer timer;
+    AffineTransform transform = new AffineTransform();
+    Rectangle gun;
 
     public static void main (String[]args){
         Main m = new Main();
@@ -37,7 +40,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     }
     public Main(){
         setLayout(null);
-        timer = new Timer(20, this); // 5 milliseconds delay
+        timer = new Timer(10, this); // 5 milliseconds delay
         //title screen
         int startButtonWidth = 200;
         int startButtonHeight = 80;
@@ -49,10 +52,11 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
         addKeyListener(this);
         requestFocus();
         setFocusable(true);
+
+        //game
         timer.start(); // Start the timer
         timer.addActionListener(this);
         timer.setRepeats(true);
-        //game
         //die screen
     }
 
@@ -81,16 +85,41 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g2.drawLine(frameWidth/2-400+90,350,400,500);
         }
         else if (event.equals("game")){
+            //drawing game background
             g.setColor(Color.CYAN);
             g.fillRect(leftFrameStartPos,topFrameStartPos,frameWidth + borderThickness*2,frameHeight + borderThickness*2);
             
+            //drawing player
             g.setColor(Color.BLACK);
             g.fillOval(playerPosX - playerDiameter/2, playerPosY - playerDiameter/2, playerDiameter, playerDiameter);
             g.setColor(Color.CYAN);
             g.fillOval(playerPosX - playerDiameter/2 + 10, playerPosY - playerDiameter/2 +10, playerDiameter-20, playerDiameter-20);
+
+            //drawing gun
+            gun = new Rectangle(100,100,100,100);
+            g.rotate(40);
         }
     }
-
+    public void checkTopBoundary(){
+        if (playerPosY <= 81) {
+            playerPosY = 81;
+        } 
+    }
+    public void checkBottomBoundary(){
+        if (playerPosY >= 686) {
+            playerPosY = 686;
+        }
+    }
+    public void checkLeftBoundary(){
+        if (playerPosX <= 58) {
+            playerPosX = 58;
+        } 
+    }
+    public void checkRightBoundary(){
+        if (playerPosX >= 963) {
+            playerPosX = 963;
+        }
+    }
     public void actionPerformed(ActionEvent e){
         if (e.getSource() == timer) {
             // Update paint only if the event is from the timer and the game has started
@@ -100,18 +129,11 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
                 playerPosY += playerVelY;
     
                 // Check boundaries
-                if (playerPosX <= 0) {
-                    playerPosX = 0;
-                } 
-                else if (playerPosX >= leftFrameStartPos + frameWidth - playerDiameter) {
-                    playerPosX = leftFrameStartPos + frameWidth - playerDiameter;
-                }
-                else if (playerPosY <= 0) {
-                    playerPosY = 0;
-                } 
-                else if (playerPosY >= topFrameStartPos + frameHeight - playerDiameter) {
-                    playerPosY = topFrameStartPos + frameHeight - playerDiameter;
-                }
+                checkTopBoundary();
+                checkBottomBoundary();
+                checkLeftBoundary();
+                checkRightBoundary();
+
                 repaint();
             }
         }
@@ -130,7 +152,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     public void mouseReleased(MouseEvent e){}
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
-    public void mouseMoved(MouseEvent e){}
+    public void mouseMoved(MouseEvent e){
         //get mouse location
         b = a.getLocation();
         x = (int) b.getX();
