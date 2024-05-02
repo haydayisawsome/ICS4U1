@@ -97,7 +97,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
 
             //drawing gun
             gun = new Rectangle(100,100,100,100);
-            g.rotate(40);
+            //g.rotate(40);
         }
     }
     public void checkTopBoundary(){

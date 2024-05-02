@@ -14,6 +14,14 @@ public class TwoDObjectTester {
             }
             System.out.println();
         }
+        System.out.println();
+        for (int i = 0; i < obj[0].length;i++){
+            for (int j = 0; j < obj.length ; j++){
+                obj[i][j] = new TwoDObjects(i,j);
+                System.out.print(obj[j][i] + "\t");
+            }
+            System.out.println();
+        }
     }
     
 }
