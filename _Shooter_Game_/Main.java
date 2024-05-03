@@ -14,23 +14,23 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     static final int topFrameStartPos = 29; 
     static final int leftFrameStartPos = 6;
 
-    Button start;
-
     PointerInfo a = MouseInfo.getPointerInfo();
     Point b;
     int x;
     int y;
 
+    Timer timer;
+    AffineTransform transform = new AffineTransform();
+    Button start;
+    int fps = 24;
+    Rectangle gun;
+
     int playerDiameter = 100;
-    int playerSpeed = 3;
+    int playerSpeed = 300/fps;
     int playerVelX = 0;
     int playerVelY = 0;
     int playerPosX = 100 + leftFrameStartPos - playerDiameter/2; //starting position
     int playerPosY = frameHeight + playerDiameter/2; //starting position
-
-    Timer timer;
-    AffineTransform transform = new AffineTransform();
-    Rectangle gun;
 
     public static void main (String[]args){
         Main m = new Main();
@@ -40,7 +40,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     }
     public Main(){
         setLayout(null);
-        timer = new Timer(10, this); // 5 milliseconds delay
+        timer = new Timer(10/fps, this); // 10 milliseconds delay
         //title screen
         int startButtonWidth = 200;
         int startButtonHeight = 80;
