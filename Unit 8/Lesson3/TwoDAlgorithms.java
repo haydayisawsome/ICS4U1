@@ -7,6 +7,8 @@
 public class TwoDAlgorithms{
     public static void main(String[]args){
         int[][]a = {{2,4,6},{8,10,12},{1,2,3}};
+
+        //calling the average method
         System.out.printf("Average = %.2f",average(a));
         System.out.println();
     }
@@ -49,5 +51,17 @@ public class TwoDAlgorithms{
         }
         double average = (double)sum/(a.length * a[0].length);
         return average;
+    }
+
+    public static int maximum(int[][]a){
+        int max = a[0][0];
+        for (int i = 0;i<a.length;i++){
+            for (int j = 0;j<a[i].length;j++){
+                if (a[i][j] > max){
+                    max = a[i][j];
+                }
+            }
+        }
+        return max;
     }
 }
