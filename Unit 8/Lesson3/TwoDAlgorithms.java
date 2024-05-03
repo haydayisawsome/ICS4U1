@@ -11,6 +11,29 @@ public class TwoDAlgorithms{
         //calling the average method
         System.out.printf("Average = %.2f",average(a));
         System.out.println();
+
+        //printing array a
+        print(a);
+        System.out.println();
+
+        //calling maximum method
+        System.out.println("Max = " + maximum(a));
+
+        //calling minimum method
+        System.out.println("Min = " + minimum(a));
+
+        //calling printOneRow method
+        printOneRow(a, 2);
+        System.out.println("\n");
+
+        //calling swap method
+        System.out.println("Swapping with row one and two");
+        swapRows(a,1,2);
+        print(a);
+
+        System.out.println("Swapping with column one and two");
+        swapColumns(a, 1, 2);
+        print(a);
     }
 
     //three print methods for int/double/string 2d arrays
@@ -53,6 +76,7 @@ public class TwoDAlgorithms{
         return average;
     }
 
+    //maximum and minimum methods
     public static int maximum(int[][]a){
         int max = a[0][0];
         for (int i = 0;i<a.length;i++){
@@ -63,5 +87,41 @@ public class TwoDAlgorithms{
             }
         }
         return max;
+    }
+
+    public static int minimum(int[][]a){
+        int min = a[0][0];
+        for (int i = 0;i<a.length;i++){
+            for (int j = 0;j<a[i].length;j++){
+                if (a[i][j] < min){
+                    min = a[i][j];
+                }
+            }
+        }
+        return min;
+    }
+
+    //printing one row method
+    public static void printOneRow(int[][]a, int row){
+        for (int i= 0;i<a.length;i++){
+            System.out.print(a[row][i] + "\t");
+        }
+    }
+
+    //swap method
+    public static int[][] swapRows (int[][]a, int rowAIndex, int rowBIndex){
+        int[] temp = a[rowAIndex];
+        a[rowAIndex] = a[rowBIndex];
+        a[rowBIndex] = temp;
+        return a;
+    }
+
+    public static int[][] swapColumns(int[][]a,int colAIndex, int colBIndex){
+        for (int i = 0;i<a.length;i++){
+            int temp = a[i][colAIndex];
+            a[i][colAIndex] = a[i][colBIndex];
+            a[i][colBIndex] = temp;
+        }
+        return a;
     }
 }

@@ -26,7 +26,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     Rectangle gun;
 
     int playerDiameter = 100;
-    int playerSpeed = 300/fps;
+    int playerSpeed = 5;
     int playerVelX = 0;
     int playerVelY = 0;
     int playerPosX = 100 + leftFrameStartPos - playerDiameter/2; //starting position
@@ -40,7 +40,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     }
     public Main(){
         setLayout(null);
-        timer = new Timer(10/fps, this); // 10 milliseconds delay
+        timer = new Timer(1000/fps, this); // 10 milliseconds delay
         //title screen
         int startButtonWidth = 200;
         int startButtonHeight = 80;
@@ -97,9 +97,21 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
 
             //drawing gun
             gun = new Rectangle(100,100,100,100);
-            //g.rotate(40);
+            transform.rotate(30);
+
         }
     }
+    public void rotateGun(double angle, Shape shape) {
+        transform.translate(10,10);
+        transform.rotate(30);
+        Rectangle gun = new Rectangle(10,10,10,10);
+        AffineTransform trans = new AffineTransform();
+        Graphics2D g2d         = rect.createGraphics();
+        trans.rotate(angle, (width / 2), (width / 2) );
+        g2d.setTransform(trans);
+        g2d.drawImage(image, 0, 0, this);
+        g2d.dispose();
+      }
     public void checkTopBoundary(){
         if (playerPosY <= 81) {
             playerPosY = 81;
