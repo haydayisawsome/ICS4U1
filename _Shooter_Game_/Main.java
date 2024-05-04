@@ -96,22 +96,34 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g.fillOval(playerPosX - playerDiameter/2 + 10, playerPosY - playerDiameter/2 +10, playerDiameter-20, playerDiameter-20);
 
             //drawing gun
-            gun = new Rectangle(100,100,100,100);
-            transform.rotate(30);
-
+            gun = new Rectangle(playerPosX - playerDiameter/2 + 25, playerPosY - playerDiameter/2 + 75, playerDiameter/2, playerDiameter/2);
+            transform.setToIdentity();
+            transform.rotate(Math.toRadians(findGunAngle()), playerPosX, playerPosY);
+            Shape transformedGun = transform.createTransformedShape(gun);
+            g.setColor(Color.RED);
+            g2.fill(transformedGun);
         }
     }
-    public void rotateGun(double angle, Shape shape) {
-        transform.translate(10,10);
-        transform.rotate(30);
-        Rectangle gun = new Rectangle(10,10,10,10);
-        AffineTransform trans = new AffineTransform();
-        Graphics2D g2d         = rect.createGraphics();
-        trans.rotate(angle, (width / 2), (width / 2) );
-        g2d.setTransform(trans);
-        g2d.drawImage(image, 0, 0, this);
-        g2d.dispose();
-      }
+    
+    public double findGunAngle(){ 
+        double mouseXPos = getMousePosition().getX();
+        double mouseYPos = getMousePosition().getY();
+        double changeOfX = mouseXPos - (playerPosX - playerDiameter/2);
+        double changeOfY = mouseYPos - (playerPosY - playerDiameter/2);
+        double angle = Math.atan2(changeOfY, changeOfX);
+    
+        // Convert angle to degrees
+        angle = Math.toDegrees(angle);
+    
+        // Adjust angle to be positive (0 to 360 degrees)
+        if (angle < 0) {
+            angle += 360;
+        }
+    
+        System.out.println("Gun angle: " + angle);
+        return angle;
+    }
+
     public void checkTopBoundary(){
         if (playerPosY <= 81) {
             playerPosY = 81;
