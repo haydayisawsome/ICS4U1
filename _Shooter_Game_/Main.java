@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.geom.*;
+import java.util.ArrayList;
 
 public class Main extends Frame implements ActionListener, WindowListener, MouseListener, KeyListener{
     static String event = "";
@@ -22,7 +23,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     Timer timer;
     AffineTransform transform = new AffineTransform();
     Button start;
-    int fps = 24;
+    int fps = 18;
     Rectangle gun;
 
     int playerDiameter = 100;
@@ -31,6 +32,14 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     int playerVelY = 0;
     int playerPosX = 100 + leftFrameStartPos - playerDiameter/2; //starting position
     int playerPosY = frameHeight + playerDiameter/2; //starting position
+
+    int gunWidth = 20; // Adjust as needed
+    int gunHeight = 60; // Adjust as needed
+    Boolean gunShoot = false; //to see when gun is fired on mouse pressed
+
+    int ammoDiameter = 10;
+    int ammoSpeed = 10;
+    ArrayList<Ammo> ammoList = new ArrayList<>();
 
     public static void main (String[]args){
         Main m = new Main();
@@ -89,38 +98,55 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g.setColor(Color.CYAN);
             g.fillRect(leftFrameStartPos,topFrameStartPos,frameWidth + borderThickness*2,frameHeight + borderThickness*2);
             
+            // Creating fired ammo from gun (must be painted first to be behind the player)
+            if (gunShoot == true){
+                g.fillOval(10,10,ammoDiameter, ammoDiameter);
+            }
+
             //drawing player
             g.setColor(Color.BLACK);
             g.fillOval(playerPosX - playerDiameter/2, playerPosY - playerDiameter/2, playerDiameter, playerDiameter);
             g.setColor(Color.CYAN);
             g.fillOval(playerPosX - playerDiameter/2 + 10, playerPosY - playerDiameter/2 +10, playerDiameter-20, playerDiameter-20);
 
-            //drawing gun
-            gun = new Rectangle(playerPosX - playerDiameter/2 + 25, playerPosY - playerDiameter/2 + 75, playerDiameter/2, playerDiameter/2);
-            transform.setToIdentity();
-            transform.rotate(Math.toRadians(findGunAngle()), playerPosX, playerPosY);
-            Shape transformedGun = transform.createTransformedShape(gun);
+            // Calculating gun position/direction
+            double gunAngle = Math.toRadians(findGunAngle());
+            gun = new Rectangle((int) (playerPosX - gunWidth / 2), (int) (playerPosY - playerDiameter / 2), gunWidth, gunHeight);
+            AffineTransform rotation = AffineTransform.getRotateInstance(gunAngle, playerPosX, playerPosY);
+            Shape rotatedGunRect = rotation.createTransformedShape(gun);
+
+            // Drawing the rotated gun rectangle
             g.setColor(Color.RED);
-            g2.fill(transformedGun);
+            g2.fill(rotatedGunRect);
         }
+    }
+
+    // Method to handle firing the ammo
+    public void fireAmmo() {
+        double gunAngle = findGunAngle();
+        int ammoPosX = playerPosX;
+        int ammoPosY = playerPosY;
+        int ammoSize = ammoDiameter;
+        int ammoSpeed = this.ammoSpeed;
+
+        Ammo newAmmo = new Ammo(ammoPosX, ammoPosY, gunAngle, ammoSize);
+        ammoList.add(newAmmo);
     }
     
     public double findGunAngle(){ 
         double mouseXPos = getMousePosition().getX();
         double mouseYPos = getMousePosition().getY();
-        double changeOfX = mouseXPos - (playerPosX - playerDiameter/2);
-        double changeOfY = mouseYPos - (playerPosY - playerDiameter/2);
-        double angle = Math.atan2(changeOfY, changeOfX);
+        double changeOfX = mouseXPos - playerPosX;
+        double changeOfY = mouseYPos - playerPosY;
+        double angle = Math.atan(changeOfY/changeOfX);
     
         // Convert angle to degrees
         angle = Math.toDegrees(angle);
-    
-        // Adjust angle to be positive (0 to 360 degrees)
-        if (angle < 0) {
-            angle += 360;
+        angle += 90;
+        
+        if(changeOfX < 0){
+            angle+= 180;
         }
-    
-        System.out.println("Gun angle: " + angle);
         return angle;
     }
 
@@ -172,8 +198,12 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     }
 
     public void mouseClicked(MouseEvent e){}
-    public void mousePressed(MouseEvent e){}
-    public void mouseReleased(MouseEvent e){}
+    public void mousePressed(MouseEvent e){
+        gunShoot = true;
+    }
+    public void mouseReleased(MouseEvent e){
+        gunShoot = false;
+    }
     public void mouseExited(MouseEvent e){}
     public void mouseEntered(MouseEvent e){}
     public void mouseMoved(MouseEvent e){
