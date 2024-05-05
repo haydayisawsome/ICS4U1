@@ -1,7 +1,5 @@
 package _Shooter_Game_;
 
-import java.awt.*;
-
 class Ammo{
     private int posX;
     private int posY;
@@ -17,9 +15,27 @@ class Ammo{
         this.posY = posY;
         this.speed = speed;
     }
-    //method for moving ammo
-    public void paint (Graphics g){
-        super.paint(g);
+
+    //setters and getters (dont need to set size/angle/speed, always the same)
+    public void setPosX(int newPosX){
+        posX = newPosX;
     }
-    //method for hitting enemy
+    public void setPosY(int newPosY){
+        posY = newPosY;
+    }
+    public int getPosX(){
+        return posX;
+    }
+    public int getPosY(){
+        return posY;
+    }
+    public int getAngle(){
+        return angle;
+    }
+    public int getSpeed(){
+        return speed;
+    }
+    public int getSize(){
+        return size;
+    }
 }

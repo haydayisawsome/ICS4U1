@@ -25,6 +25,9 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     Button start;
     int fps = 18;
     Rectangle gun;
+    Boolean mouseExited = false;
+    Font title;
+    Font defaultFont;
 
     int playerDiameter = 100;
     int playerSpeed = 5;
@@ -59,6 +62,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
         add(start);
         start.addActionListener(this);
         addKeyListener(this);
+        addMouseListener(this);
         requestFocus();
         setFocusable(true);
 
@@ -79,8 +83,8 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g.setColor(Color.GRAY);
             g.fillRect(leftFrameStartPos+borderThickness,topFrameStartPos+borderThickness,frameWidth,frameHeight);
 
-            Font currentFont = g.getFont();
-            Font title = currentFont.deriveFont(currentFont.getSize() * 8F);
+            defaultFont = g.getFont();
+            title = defaultFont.deriveFont(defaultFont.getSize() * 8F);
             g.setFont(title);
             g.setColor(Color.BLUE);
             g.drawString("Shooter Game", frameWidth/2 - 300, 300);
@@ -93,7 +97,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g.setColor(Color.BLACK);
             g2.drawLine(frameWidth/2-400+90,350,400,500);
         }
-        else if (event.equals("game")){
+        else if (event.equals("game") && mouseExited == false){
             //drawing game background
             g.setColor(Color.CYAN);
             g.fillRect(leftFrameStartPos,topFrameStartPos,frameWidth + borderThickness*2,frameHeight + borderThickness*2);
@@ -118,19 +122,44 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             // Drawing the rotated gun rectangle
             g.setColor(Color.RED);
             g2.fill(rotatedGunRect);
+            if(gunShoot == true){
+                fireAmmo();
+            }   
         }
+        else if (event.equals("game") && mouseExited == true){
+            g.setColor(Color.GRAY);
+            g.fillRect(leftFrameStartPos,topFrameStartPos,frameWidth + borderThickness*2,frameHeight + borderThickness*2);
+            g.setFont(title);
+            g.setColor(Color.BLACK);
+            g.drawString("GAME PAUSED", frameWidth/2 - 350, 300);
+            g.setFont(defaultFont);
+            g.drawString("Your mouse is outside of the window", frameWidth/2 - 100, 400);
+        }
+        System.out.println("Mouse Exited: " + mouseExited);
     }
 
     // Method to handle firing the ammo
     public void fireAmmo() {
-        double gunAngle = findGunAngle();
+        int gunAngle = (int) findGunAngle();
         int ammoPosX = playerPosX;
         int ammoPosY = playerPosY;
         int ammoSize = ammoDiameter;
         int ammoSpeed = this.ammoSpeed;
 
-        Ammo newAmmo = new Ammo(ammoPosX, ammoPosY, gunAngle, ammoSize);
+        Ammo newAmmo = new Ammo(ammoPosX, ammoPosY, gunAngle, ammoSize, ammoSpeed);
         ammoList.add(newAmmo);
+        System.out.println("Ammo fired");
+    }
+    public void updateAmmo() {
+        for (Ammo ammo : ammoList) {
+            // Calculate the new position of the ammo based on its angle and speed
+            int newPosX = (int) (ammo.getPosX() + Math.cos(Math.toRadians(ammo.getAngle())) * ammo.getSpeed());
+            int newPosY = (int) (ammo.getPosY() + Math.sin(Math.toRadians(ammo.getAngle())) * ammo.getSpeed());
+            ammo.setPosX(newPosX);
+            ammo.setPosY(newPosY);
+
+            // Add collision detection or other logic here
+        }
     }
     
     public double findGunAngle(){ 
@@ -173,7 +202,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     public void actionPerformed(ActionEvent e){
         if (e.getSource() == timer) {
             // Update paint only if the event is from the timer and the game has started
-            if (event.equals("game")) {
+            if (event.equals("game") && mouseExited == false) {
                 // Update player position based on velocity
                 playerPosX += playerVelX;
                 playerPosY += playerVelY;
@@ -204,8 +233,14 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     public void mouseReleased(MouseEvent e){
         gunShoot = false;
     }
-    public void mouseExited(MouseEvent e){}
-    public void mouseEntered(MouseEvent e){}
+    public void mouseExited(MouseEvent e){
+        mouseExited = true;
+        repaint();
+    }
+    public void mouseEntered(MouseEvent e){
+        mouseExited = false;
+        repaint();
+    }
     public void mouseMoved(MouseEvent e){
         //get mouse location
         b = a.getLocation();
