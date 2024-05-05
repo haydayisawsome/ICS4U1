@@ -10,7 +10,7 @@ class Ammo{
     //overloaded constructor
     public Ammo(int posX, int posY, int angle, int size, int speed){
         this.size = size;
-        this.angle = angle;
+        this.angle = angle - 90;
         this.posX = posX;
         this.posY = posY;
         this.speed = speed;

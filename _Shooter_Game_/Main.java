@@ -39,6 +39,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     int gunWidth = 20; // Adjust as needed
     int gunHeight = 60; // Adjust as needed
     Boolean gunShoot = false; //to see when gun is fired on mouse pressed
+    double gunAngle = 0;
 
     int ammoDiameter = 10;
     int ammoSpeed = 10;
@@ -114,7 +115,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g.fillOval(playerPosX - playerDiameter/2 + 10, playerPosY - playerDiameter/2 +10, playerDiameter-20, playerDiameter-20);
 
             // Calculating gun position/direction
-            double gunAngle = Math.toRadians(findGunAngle());
+            gunAngle = Math.toRadians(findGunAngle());
             gun = new Rectangle((int) (playerPosX - gunWidth / 2), (int) (playerPosY - playerDiameter / 2), gunWidth, gunHeight);
             AffineTransform rotation = AffineTransform.getRotateInstance(gunAngle, playerPosX, playerPosY);
             Shape rotatedGunRect = rotation.createTransformedShape(gun);
@@ -124,7 +125,14 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g2.fill(rotatedGunRect);
             if(gunShoot == true){
                 fireAmmo();
-            }   
+            }
+
+            // Iterating through the entire ammo list to draw each ammo object
+            g.setColor(Color.YELLOW);
+            for (Ammo i : ammoList){
+                g.fillOval(i.getPosX(),i.getPosY(),i.getSize(),i.getSize());
+            }
+            updateAmmo();
         }
         else if (event.equals("game") && mouseExited == true){
             g.setColor(Color.GRAY);
@@ -135,18 +143,16 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g.setFont(defaultFont);
             g.drawString("Your mouse is outside of the window", frameWidth/2 - 100, 400);
         }
-        System.out.println("Mouse Exited: " + mouseExited);
     }
 
     // Method to handle firing the ammo
     public void fireAmmo() {
-        int gunAngle = (int) findGunAngle();
         int ammoPosX = playerPosX;
         int ammoPosY = playerPosY;
         int ammoSize = ammoDiameter;
         int ammoSpeed = this.ammoSpeed;
 
-        Ammo newAmmo = new Ammo(ammoPosX, ammoPosY, gunAngle, ammoSize, ammoSpeed);
+        Ammo newAmmo = new Ammo(ammoPosX, ammoPosY, (int)findGunAngle(), ammoSize, ammoSpeed);
         ammoList.add(newAmmo);
         System.out.println("Ammo fired");
     }
