@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.target=IsaacTester
+comment0.text=\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\nCreate\ a\ tester\ class\ called\ YourNameTester\ (for\ example\ JohnTester)\ that\ uses\ the\ methods\ in\ YourName2DArray\ class\ and\ produces\ an\ output\ as\ shown\ below.\ \t\t\t\t\t\t\t\t\t\t\t\t\r\nSample\ Output\r\n\r\nSize\r\n3\r\nInitial\ Grid\r\n2\t3\t1\r\n1\t2\t2\r\n2\t1\t2\r\nProduct\ of\ elements\ in\ row\ 2(index\ 1)\r\n4\r\nProduct\ of\ elements\ in\ column\ 2(index\ 1)\r\n6\r\nAfter\ swapping\ row\ 0\ to\ row\ 1\r\n1\t2\t2\r\n2\t3\t1\r\n2\t1\t2\r\n
+comment1.params=size
+comment1.target=int[][]\ initGrid(int)
+comment2.params=list
+comment2.target=int\ numEven(int[][])
+comment3.params=list\ row
+comment3.target=int\ rowProduct(int[][],\ int)
+comment4.params=list\ col
+comment4.target=int\ colProduct(int[][],\ int)
+comment5.params=list\ rowIndexA\ rowIndexB
+comment5.target=int[][]\ swapRow(int[][],\ int,\ int)
+comment6.params=list
+comment6.target=void\ printArray(int[][])
+comment7.params=args
+comment7.target=void\ main(java.lang.String[])
+numComments=8

@@ -42,7 +42,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
     double gunAngle = 0;
 
     int ammoDiameter = 10;
-    int ammoSpeed = 10;
+    int ammoSpeed = 50;
     ArrayList<Ammo> ammoList = new ArrayList<>();
 
     public static void main (String[]args){
@@ -99,13 +99,15 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g2.drawLine(frameWidth/2-400+90,350,400,500);
         }
         else if (event.equals("game") && mouseExited == false){
+            
             //drawing game background
             g.setColor(Color.CYAN);
             g.fillRect(leftFrameStartPos,topFrameStartPos,frameWidth + borderThickness*2,frameHeight + borderThickness*2);
-            
-            // Creating fired ammo from gun (must be painted first to be behind the player)
-            if (gunShoot == true){
-                g.fillOval(10,10,ammoDiameter, ammoDiameter);
+
+            // Iterating through the entire ammo list to draw each ammo object
+            g.setColor(Color.YELLOW);
+            for (Ammo i : ammoList){
+                g.fillOval(i.getPosX(),i.getPosY(),i.getSize(),i.getSize());
             }
 
             //drawing player
@@ -126,13 +128,6 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             if(gunShoot == true){
                 fireAmmo();
             }
-
-            // Iterating through the entire ammo list to draw each ammo object
-            g.setColor(Color.YELLOW);
-            for (Ammo i : ammoList){
-                g.fillOval(i.getPosX(),i.getPosY(),i.getSize(),i.getSize());
-            }
-            updateAmmo();
         }
         else if (event.equals("game") && mouseExited == true){
             g.setColor(Color.GRAY);
@@ -143,6 +138,8 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             g.setFont(defaultFont);
             g.drawString("Your mouse is outside of the window", frameWidth/2 - 100, 400);
         }
+
+        updateAmmo(); //this has to be at the bottom for the paint to work on the frame
     }
 
     // Method to handle firing the ammo
@@ -152,7 +149,7 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
         int ammoSize = ammoDiameter;
         int ammoSpeed = this.ammoSpeed;
 
-        Ammo newAmmo = new Ammo(ammoPosX, ammoPosY, (int)findGunAngle(), ammoSize, ammoSpeed);
+        Ammo newAmmo = new Ammo(ammoPosX - ammoSize/2, ammoPosY - ammoSize/2, findGunAngle(), ammoSize, ammoSpeed);
         ammoList.add(newAmmo);
         System.out.println("Ammo fired");
     }
@@ -164,8 +161,16 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             ammo.setPosX(newPosX);
             ammo.setPosY(newPosY);
 
-            // Add collision detection or other logic here
+            // Deleting ammo if it passes the frame border
+            if (ammo.getPosX() + leftFrameStartPos< 0 || ammo.getPosX() > frameWidth + leftFrameStartPos || ammo.getPosY() + topFrameStartPos< 0 || ammo.getPosY() > frameHeight + topFrameStartPos){
+                removeAmmo(ammo);
+            }
+
+            // Add collision detection
         }
+    }
+    public void removeAmmo(Ammo ammo){
+        //ammoList.remove(ammo);
     }
     
     public double findGunAngle(){ 

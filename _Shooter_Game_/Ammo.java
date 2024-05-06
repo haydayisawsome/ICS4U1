@@ -3,12 +3,12 @@ package _Shooter_Game_;
 class Ammo{
     private int posX;
     private int posY;
-    private int angle;
+    private double angle;
     final private int size;
     final private int speed;
 
     //overloaded constructor
-    public Ammo(int posX, int posY, int angle, int size, int speed){
+    public Ammo(int posX, int posY, double angle, int size, int speed){
         this.size = size;
         this.angle = angle - 90;
         this.posX = posX;
@@ -29,7 +29,7 @@ class Ammo{
     public int getPosY(){
         return posY;
     }
-    public int getAngle(){
+    public double getAngle(){
         return angle;
     }
     public int getSpeed(){
