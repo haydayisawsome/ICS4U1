@@ -151,7 +151,6 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
 
         Ammo newAmmo = new Ammo(ammoPosX - ammoSize/2, ammoPosY - ammoSize/2, findGunAngle(), ammoSize, ammoSpeed);
         ammoList.add(newAmmo);
-        System.out.println("Ammo fired");
     }
     public void updateAmmo() {
         for (Ammo ammo : ammoList) {
@@ -161,16 +160,15 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
             ammo.setPosX(newPosX);
             ammo.setPosY(newPosY);
 
-            // Deleting ammo if it passes the frame border
-            if (ammo.getPosX() + leftFrameStartPos< 0 || ammo.getPosX() > frameWidth + leftFrameStartPos || ammo.getPosY() + topFrameStartPos< 0 || ammo.getPosY() > frameHeight + topFrameStartPos){
-                removeAmmo(ammo);
-            }
-
             // Add collision detection
+
+            // Deleting ammo if it passes the frame border
+            if(ammoList.size() > 20){
+                ammoList.remove(0);
+                System.out.println(ammoList.get(0).getPosX() + "  " + ammoList.get(0).getPosY());
+                System.out.println(ammoList.size());
+            }
         }
-    }
-    public void removeAmmo(Ammo ammo){
-        //ammoList.remove(ammo);
     }
     
     public double findGunAngle(){ 
