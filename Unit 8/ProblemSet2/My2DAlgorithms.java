@@ -61,8 +61,8 @@ public class My2DAlgorithms {
     public static int diagonalSumLeft(int[][] list){
         int sum = 0;
         for (int i = 0;i<list.length;i++){
-            for (int j = 0;j<list[i].length;j++){
-                if (i == j){
+            for (int j = j<list[i].length;j++){
+                if (i == (list[i].length - j)){
                     sum += list[i][j];
                 }
             }
