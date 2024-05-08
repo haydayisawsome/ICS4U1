@@ -60,7 +60,6 @@
 }
 public class IsaacTester {
     public static void main(String[] args) {
-        Isaac2DArray obj = new Isaac2DArray();
         System.out.println("Size\n3\nInitial Grid");
         int[][]list = Isaac2DArray.initGrid(3);
         Isaac2DArray.printArray(list);
