@@ -1,3 +1,4 @@
+//Question 4 and 5
 public class My2DAlgorithms {
     public static void main(String[]args){
         int[][] list = {{1,2,3},{4,5,6},{7,8,9}};
@@ -10,8 +11,8 @@ public class My2DAlgorithms {
         System.out.println(colSum(list,1));
         print(rowSumArray(list));
         print(colSumArray(list));
+        System.out.println(diagonalSumRight(list));
         System.out.println(diagonalSumLeft(list));
-        System.out.println(diagonalSumRight(list)); //
         System.out.println(isMagic(list)); //
         System.out.println(isMagic(list2)); //
         System.out.println(rowMax(list2,0));
@@ -50,8 +51,8 @@ public class My2DAlgorithms {
     public static int diagonalSumRight(int[][] list){
         int sum = 0;
         for (int i = 0;i<list.length;i++){
-            for (int j = list[i].length;j<0;j--){
-                if (i == list[i].length - j){
+            for (int j = list[i].length - 1;j>=0;j--){
+                if (i == list[i].length - j - 1){
                     sum += list[i][j];
                 }
             }
@@ -61,8 +62,8 @@ public class My2DAlgorithms {
     public static int diagonalSumLeft(int[][] list){
         int sum = 0;
         for (int i = 0;i<list.length;i++){
-            for (int j = j<list[i].length;j++){
-                if (i == (list[i].length - j)){
+            for (int j = 0;j<list[i].length;j++){
+                if (i == j){
                     sum += list[i][j];
                 }
             }
@@ -76,7 +77,7 @@ public class My2DAlgorithms {
         if (sum != diagonalSumRight(list)){
             result = false;
         }
-
+        
         int[] sumOfEachCols = colSumArray(list);
         for (int i = 0;i<sumOfEachCols.length;i++){
             if (sumOfEachCols[i] != sum){
@@ -117,7 +118,7 @@ public class My2DAlgorithms {
         for (int i = 0;i<list.length;i++){
             diagonalIndex = i;
             for (int j = 0;j<list[i].length;j++){
-                if(i < diagonalIndex && j<diagonalIndex){
+                if(i < diagonalIndex || j<diagonalIndex){
                     if(list[i][j] != 0){
                         result = false;
                     }

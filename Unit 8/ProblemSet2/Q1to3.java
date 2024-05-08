@@ -1,4 +1,4 @@
-public class Q1to4 {
+public class Q1to3 {
     public static void main(String[] args) {
         int[][] values = new int[4][5];
         int[][] matrix = new int[5][5];
@@ -28,8 +28,6 @@ public class Q1to4 {
             }
         }
         print(matrix);
-
-        //Question 4: 
     }
     
     public static void print(int[][]list){
