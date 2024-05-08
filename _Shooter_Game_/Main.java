@@ -3,6 +3,7 @@ package _Shooter_Game_;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import java.awt.geom.*;
 import java.util.ArrayList;
 
@@ -153,27 +154,33 @@ public class Main extends Frame implements ActionListener, WindowListener, Mouse
         ammoList.add(newAmmo);
     }
     public void updateAmmo() {
-        for (Ammo ammo : ammoList) {
-            // Calculate the new position of the ammo based on its angle and speed
+        // Create a copy of the ammoList to avoid ConcurrentModificationException
+        // There will be an error if you try to change the main array list when it is being changed
+        ArrayList<Ammo> copy = new ArrayList<>(ammoList);
+    
+        // Iterate over the copied list and update ammo positions
+        for (Ammo ammo : copy) {
             int newPosX = (int) (ammo.getPosX() + Math.cos(Math.toRadians(ammo.getAngle())) * ammo.getSpeed());
             int newPosY = (int) (ammo.getPosY() + Math.sin(Math.toRadians(ammo.getAngle())) * ammo.getSpeed());
             ammo.setPosX(newPosX);
             ammo.setPosY(newPosY);
-
+    
             // Add collision detection
-
+    
             // Deleting ammo if it passes the frame border
-            if(ammoList.size() > 20){
-                ammoList.remove(0);
-                System.out.println(ammoList.get(0).getPosX() + "  " + ammoList.get(0).getPosY());
-                System.out.println(ammoList.size());
+            if (ammoList.size() > 20) {
+                ammoList.remove(ammo);
             }
         }
     }
     
     public double findGunAngle(){ 
-        double mouseXPos = getMousePosition().getX();
-        double mouseYPos = getMousePosition().getY();
+        double mouseXPos = 0;
+        double mouseYPos = 0;
+        if(getMousePosition() != null){
+            mouseXPos = getMousePosition().getX();
+            mouseYPos = getMousePosition().getY();
+        }
         double changeOfX = mouseXPos - playerPosX;
         double changeOfY = mouseYPos - playerPosY;
         double angle = Math.atan(changeOfY/changeOfX);
