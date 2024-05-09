@@ -3,7 +3,7 @@ package GUI;
 import java.awt.*;
 import java.awt.event.*;
 
-import javax.swing.JFrame;
+//mport javax.swing.JFrame;
 
 public class MovingCar extends Frame implements ActionListener{
     int x;
