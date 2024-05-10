@@ -1,4 +1,4 @@
- class Isaac2DArray{
+class Isaac2DArray{
     public static int[][] initGrid(int size){
         int[][] list = new int[size][size];
         for (int i = 0;i<list.length;i++){
