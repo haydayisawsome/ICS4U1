@@ -45,10 +45,15 @@ class Animal{
     public void sleep(){
         System.out.println("Animal is sleeping");
     }
+    public void display(){
+        System.out.println(name);
+    }
 }
 class Dog extends Animal{
     @SuppressWarnings("unused")
     private String ownerName;
+    String name = "Dog";
+
     public Dog(){
         super();
         //this calls the constuctor of the parent class
@@ -77,11 +82,18 @@ class Dog extends Animal{
     public void bark(){
         System.out.println("Dog is barking");
     }
+
+    //@Override;
+    public void display(){
+        System.out.println(name);
+        System.out.println(super.name);
+    }
 }
 
 class BabyDog extends Dog{
     @SuppressWarnings("unused")
     private boolean needsMilk;
+    private String name = "Baby Dog";
     public BabyDog(){
         super();
         System.out.println("It is BabyDog default constructor");
@@ -94,5 +106,9 @@ class BabyDog extends Dog{
     public void eat(){
         super.eat(); //super can be on any line when calling a method
         System.err.println("BabyDog is eating");
+    }
+
+    public void display(){
+        System.out.println(name);
     }
 }
