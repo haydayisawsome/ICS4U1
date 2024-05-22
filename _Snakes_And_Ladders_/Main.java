@@ -58,6 +58,7 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         //TITLE SCREEN
         // JLabel source: https://docs.oracle.com/javase%2F8%2Fdocs%2Fapi%2F%2F/javax/swing/JLabel.html
         JLabel title = new JLabel("SNAKES AND LADDERS");
+        title.setVisible(true);
         title.setFont(new Font("Arial", Font.BOLD, 60));
         title.setBounds(100,100,100,100);
         // Color class source: https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html
@@ -83,13 +84,14 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         JLabel boardLabel = new JLabel();
         boardLabel.setIcon(boardImgIcon);
         boardLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        boardLabel.setPreferredSize(new Dimension(100,100)); jo
 
-        titlePanel.setVisible(true);
         titlePanel.setBackground(Color.YELLOW);
         titlePanel.add(title,BorderLayout.PAGE_START);
         titlePanel.add(playGame,BorderLayout.PAGE_END);
         titlePanel.add(boardLabel,BorderLayout.CENTER);
         titlePanel.setBounds(0,0,frameWidth,frameHeight-35);
+        //titlePanel.setPreferredSize(new Dimension(frameWidth,frameHeight));
         add(titlePanel);
 
         //OPTIONS SCREEN
@@ -134,6 +136,7 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         gamePanel.add(boardLabel2);
         gamePanel.setBounds(0,0,frameWidth,frameHeight-35);
         add(gamePanel);
+        titlePanel.setVisible(true);
 
         //Setting up tiles position
         for (int i = 0;i<tileList.length;i++){
@@ -161,15 +164,15 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     //paint method for all graphics
     public void paint(Graphics g){
         //detect which event is ongoing and paints screen depending on event
-        if(event.equals("START")){
-            g.setColor(Color.BLACK);
-            g.fillOval(tileList[1][1].getXpos(), tileList[1][1].getYpos(), 800, 800);
-        }
+
     }
 
     //all code after the start button is here
     public void actionPerformed(ActionEvent e){
         String s = e.getActionCommand(); //source: GUI unit, MovingCar.java class
+        if (s.equals("Title Screen")){
+            titlePanel.setVisible(true);
+        }
         if (s.equals("SELECT OPTIONS")){
             //changing visible panel to options screen
             titlePanel.setVisible(false);
