@@ -9,7 +9,7 @@ public class Player {
         this.playerNum = playerNum;
         //class Color Source: https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html
         playerColor = new Color(getRandomColor(),getRandomColor(),getRandomColor());
-        currentTile = 0;
+        currentTile = 1;
     }
     public Color getPlayerColor(){
         return playerColor;

@@ -1,13 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.*;
 
 public class Main extends JFrame implements WindowListener, MouseListener, ActionListener{
     final static int frameHeight = 814;
     final static int frameWidth = 814;
 
     String event = "Title Screen";
-    int NumOfPlayers = 4;
 
     // creating seperate panels for different events
     JPanel titlePanel = new JPanel(new BorderLayout(0,0));
@@ -17,6 +17,16 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     //Creating a slider to see how many players are playing
     //Source (including the JSlider methods used in this game): https://www.geeksforgeeks.org/java-swing-jslider/
     JSlider slider = new JSlider(1,10,4);
+
+    //GAME VARIABLES
+    int NumOfPlayers = 4;
+    ArrayList<Player> playerList = new ArrayList<>();
+    //a large 2d array with all tiles
+    Tile[][] tileList = new Tile[10][10];
+    final int tile100xPos = 100;
+    final int tile100yPos = 100;
+    final int tileSpacing = 30;
+    final int playerSize = 10;
 
     //main method used to create panel and an instance of this class to create a panel of the game
     public static void main(String[]args){
@@ -124,18 +134,36 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         gamePanel.add(boardLabel2);
         gamePanel.setBounds(0,0,frameWidth,frameHeight-35);
         add(gamePanel);
+
+        //Setting up tiles position
+        for (int i = 0;i<tileList.length;i++){
+            for(int j = 0;j<tileList[i].length;j++){
+                //this if statement detects rows that have ascending tile numbe(rs
+                if(i % 2 == 1){
+                    tileList[i][j] = new Tile((10-i - 1)*10+(j+1),tile100xPos+tileSpacing*(j),tile100yPos+tileSpacing*(i));
+                }
+                
+                //this if statement detects rows that have descending tile numbers
+                else{
+                    tileList[i][j] = new Tile((10-i-1)*10+(10-j),tile100xPos+tileSpacing*(j),tile100yPos+tileSpacing*(i));
+                }
+            }
+        }
+        for (int i = 0;i<tileList.length;i++){
+            for(int j = 0;j<tileList[i].length;j++){
+                System.out.print(tileList[i][j].getYpos() + "\t");
+            }
+            System.out.println();
+        }
+        repaint();
     }
 
     //paint method for all graphics
-    public void paint(Graphics G){
+    public void paint(Graphics g){
         //detect which event is ongoing and paints screen depending on event
-        
-        //this line of code sets the graphics to match the pixels of the JFrame, and not the JPanel
-        super.paint(G);
-        Graphics g = getContentPane().getGraphics();
-
-        if(event.equals("Game")){
-
+        if(event.equals("START")){
+            g.setColor(Color.BLACK);
+            g.fillOval(tileList[1][1].getXpos(), tileList[1][1].getYpos(), 800, 800);
         }
     }
 
@@ -148,12 +176,14 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
             optionsPanel.setVisible(true);
 
             //detecting the different buttons pressed in options screen
-
         }
         if(s.equals("START")){
             NumOfPlayers = slider.getValue();
             optionsPanel.setVisible(false);
             gamePanel.setVisible(true);
+            for (int i = 1;i <= NumOfPlayers;i++){
+                playerList.add(new Player(i));
+            }
         }
     }
 
