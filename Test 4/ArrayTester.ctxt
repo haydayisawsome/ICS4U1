@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=ArrayTester
+comment1.params=r\ c
+comment1.target=int[][]\ initGrid(int,\ int)
+comment2.params=list\ item
+comment2.target=boolean\ found(int[][],\ int)
+comment3.params=list\ columnIndex
+comment3.target=int\ colProduct(int[][],\ int)
+comment4.params=list\ rowIndex
+comment4.target=double\ rowAverage(int[][],\ int)
+comment5.params=list\ colIndexA\ colIndexB
+comment5.target=int[][]\ swapCol(int[][],\ int,\ int)
+comment6.params=list
+comment6.target=void\ print(int[][])
+comment7.params=args
+comment7.target=void\ main(java.lang.String[])
+numComments=8
