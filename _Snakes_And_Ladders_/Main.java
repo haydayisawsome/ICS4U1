@@ -127,7 +127,8 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
 
         //GAME PANEL
         JLabel boardLabel2 = new JLabel();
-        boardLabel2.setIcon(boardImgIcon);
+        ImageIcon boardImgIcon2 = new ImageIcon("_Snakes_And_Ladders_\\resources\\Board.png"); 
+        boardLabel2.setIcon(boardImgIcon2);
         boardLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 
         gamePanel.setBackground(Color.YELLOW);
