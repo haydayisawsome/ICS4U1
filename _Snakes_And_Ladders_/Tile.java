@@ -70,4 +70,44 @@ public class Tile {
         }
         return newTile;
     }
+    public static int getTileRow(int tile){
+        if(tile >= 91){
+            return 0;
+        }
+        else if(tile >= 81){
+            return 1;
+        }
+        else if(tile >= 71){
+            return 2;
+        }
+        else if(tile >= 61){
+            return 3;
+        }
+        else if(tile >= 51){
+            return 4;
+        }
+        else if(tile >= 41){
+            return 5;
+        }
+        else if(tile >= 31){
+            return 6;
+        }
+        else if(tile >= 21){
+            return 7;
+        }
+        else if(tile >= 11){
+            return 8;
+        }
+        else{
+            return 9;
+        }
+    }
+    public static int getTileCol(int tile){
+        if(getTileRow(tile) % 2 == 1){
+            return tile - (10-getTileRow(tile) - 1)*10 - 1;
+        }
+        else{
+            return 9 - (tile - (10-getTileRow(tile)-1)*10) + 1;
+        }
+    }
 }

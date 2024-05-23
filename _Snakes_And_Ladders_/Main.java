@@ -13,6 +13,7 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     JPanel titlePanel = new JPanel(new BorderLayout(0,0));
     JPanel optionsPanel = new JPanel(new BorderLayout(0,0));
     JPanel gamePanel = new JPanel(new BorderLayout(0,0));
+    JLabel boardLabel2 = new JLabel();
 
     //Creating a slider to see how many players are playing
     //Source (including the JSlider methods used in this game): https://www.geeksforgeeks.org/java-swing-jslider/
@@ -27,11 +28,17 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     final int tile100yPos = 100;
     final int tileSpacing = 30;
     final int playerSize = 10;
+    int playerTurn = 1;
 
     //main method used to create panel and an instance of this class to create a panel of the game
     public static void main(String[]args){
         Main main = new Main();
         main.setFrame();
+    }
+
+    //get tileList method for other classes
+    public Tile[][] tileList(){
+        return tileList;
     }
 
     //this method must be an instance method as an error will occur when the code is placed in the static main method
@@ -84,14 +91,14 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         JLabel boardLabel = new JLabel();
         boardLabel.setIcon(boardImgIcon);
         boardLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        boardLabel.setPreferredSize(new Dimension(100,100)); jo
+        boardLabel.setPreferredSize(new Dimension(600,600));
 
         titlePanel.setBackground(Color.YELLOW);
         titlePanel.add(title,BorderLayout.PAGE_START);
         titlePanel.add(playGame,BorderLayout.PAGE_END);
         titlePanel.add(boardLabel,BorderLayout.CENTER);
         titlePanel.setBounds(0,0,frameWidth,frameHeight-35);
-        //titlePanel.setPreferredSize(new Dimension(frameWidth,frameHeight));
+        titlePanel.setVisible(true);
         add(titlePanel);
 
         //OPTIONS SCREEN
@@ -128,7 +135,6 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         add(optionsPanel);
 
         //GAME PANEL
-        JLabel boardLabel2 = new JLabel();
         ImageIcon boardImgIcon2 = new ImageIcon("_Snakes_And_Ladders_\\resources\\Board.png"); 
         boardLabel2.setIcon(boardImgIcon2);
         boardLabel2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -137,7 +143,6 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         gamePanel.add(boardLabel2);
         gamePanel.setBounds(0,0,frameWidth,frameHeight-35);
         add(gamePanel);
-        titlePanel.setVisible(true);
 
         //Setting up tiles position
         for (int i = 0;i<tileList.length;i++){
@@ -153,19 +158,17 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
                 }
             }
         }
-        for (int i = 0;i<tileList.length;i++){
-            for(int j = 0;j<tileList[i].length;j++){
-                System.out.print(tileList[i][j].getYpos() + "\t");
-            }
-            System.out.println();
-        }
-        repaint();
+
+        //GAME CODE
     }
-
-    //paint method for all graphics
+    
+    @Override
     public void paint(Graphics g){
-        //detect which event is ongoing and paints screen depending on event
-
+        super.paint(g);
+        for(Player player : playerList) {
+            player.paint(g);
+        }
+        System.out.println("bob");
     }
 
     //all code after the start button is here
@@ -186,8 +189,9 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
             optionsPanel.setVisible(false);
             gamePanel.setVisible(true);
             for (int i = 1;i <= NumOfPlayers;i++){
-                playerList.add(new Player(i));
+                playerList.add(new Player(i, playerSize));
             }
+            repaint();
         }
     }
 
