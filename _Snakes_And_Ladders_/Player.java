@@ -3,14 +3,14 @@ import java.awt.*;
 public class Player extends Main {
     private Color playerColor;
     private int playerNum;
-    private int currentTile;
+    private int currentTile = 1;
     private int playerSize;
 
     public Player(int playerNum, int playerSize){
         this.playerNum = playerNum;
         //class Color Source: https://docs.oracle.com/javase/8/docs/api/java/awt/Color.html
         playerColor = new Color(getRandomColor(),getRandomColor(),getRandomColor());
-        currentTile = 5;
+        this.playerSize = playerSize;
     }
     public Color getPlayerColor(){
         return playerColor;
@@ -31,7 +31,7 @@ public class Player extends Main {
         g.setColor(playerColor);
         System.out.println(Tile.getTileRow(currentTile));
         System.out.println(Tile.getTileCol(currentTile));
-        g.fillOval(tileList[Tile.getTileRow(currentTile)][Tile.getTileCol(currentTile)].getXpos(),tileList[Tile.getTileRow(currentTile)][Tile.getTileCol(currentTile)].getYpos(),playerSize,playerSize);
+        g.fillOval(tileList[Tile.getTileRow(currentTile)][Tile.getTileCol(currentTile)].getXpos() + (3-playerNum)*5,tileList[Tile.getTileRow(currentTile)][Tile.getTileCol(currentTile)].getYpos(),playerSize,playerSize);
         System.out.println(playerColor);
     }
 }

@@ -24,11 +24,14 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     ArrayList<Player> playerList = new ArrayList<>();
     //a large 2d array with all tiles
     Tile[][] tileList = new Tile[10][10];
-    final int tile100xPos = 100;
-    final int tile100yPos = 100;
-    final int tileSpacing = 30;
-    final int playerSize = 10;
+    final int tile100xPos = 145;
+    final int tile100yPos = 150;
+    final int tileSpacing = 56;
+    final int playerSize = 30;
     int playerTurn = 1;
+    Player winner = null;
+    int gameRound = 0;
+    int dieResult;
 
     //main method used to create panel and an instance of this class to create a panel of the game
     public static void main(String[]args){
@@ -139,11 +142,6 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         boardLabel2.setIcon(boardImgIcon2);
         boardLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 
-        gamePanel.setBackground(Color.YELLOW);
-        gamePanel.add(boardLabel2);
-        gamePanel.setBounds(0,0,frameWidth,frameHeight-35);
-        add(gamePanel);
-
         //Setting up tiles position
         for (int i = 0;i<tileList.length;i++){
             for(int j = 0;j<tileList[i].length;j++){
@@ -159,7 +157,40 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
             }
         }
 
-        //GAME CODE
+        //setting up game title 
+        JLabel roundLabel = new JLabel("Round: " + gameRound);
+        roundLabel.setSize(100,100);
+
+        JLabel playerLabel = new JLabel("Player: ");
+        playerLabel.setSize(100,100);
+        
+        JLabel gameInfoLabel = new JLabel();
+        gameInfoLabel.setForeground(Color.BLUE);
+        gameInfoLabel.setPreferredSize(new Dimension(700,100));
+        gameInfoLabel.add(roundLabel,BorderLayout.WEST);
+        gameInfoLabel.add(playerLabel,BorderLayout.EAST);
+
+        //setting up die panel
+        JButton rollDie = new JButton("roll die");
+        rollDie.addActionListener(this);
+        rollDie.setSize(new Dimension(200,40));
+        rollDie.setBackground(Color.BLUE);
+
+        JLabel dieResult = new JLabel("die result");
+        dieResult.setSize(new Dimension(200,40));
+
+        JPanel diePanel = new JPanel();
+        diePanel.add(rollDie,BorderLayout.WEST);
+        diePanel.add(dieResult,BorderLayout.EAST);
+        //sets the height of the jpanel (width does not matter due to BorderLayout)
+        diePanel.setSize(new Dimension(800,60));
+
+        gamePanel.add(gameInfoLabel,BorderLayout.PAGE_START);
+        gamePanel.add(diePanel,BorderLayout.PAGE_END);
+        gamePanel.setBackground(Color.YELLOW);
+        gamePanel.add(boardLabel2,BorderLayout.CENTER);
+        gamePanel.setBounds(0,0,frameWidth,frameHeight-35);
+        add(gamePanel);
     }
     
     @Override
@@ -168,7 +199,6 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         for(Player player : playerList) {
             player.paint(g);
         }
-        System.out.println("bob");
     }
 
     //all code after the start button is here
@@ -191,8 +221,41 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
             for (int i = 1;i <= NumOfPlayers;i++){
                 playerList.add(new Player(i, playerSize));
             }
+            //paints every player's tile on the starting tile 
             repaint();
+            
+            //GAME CODE
+            //this runs a game round every loop until there is a winner
+            while (winner == null){
+                //this loop runs a player's turn
+                gameRound++;
+                for (int i = 0;i < NumOfPlayers;i++){
+                    //the player roles the die
+                    rollDie();
+
+                    //this moves the player to the new tile after the die was rolled
+                    playerList.get(i).setCurrentTile(playerList.get(i).getCurrentTile() + dieResult);
+                    repaint();
+
+                    //this paints the player again (paints to a new tile if the player was previously on a snake/ladder tile)
+                    playerList.get(i).setCurrentTile(tileList[Tile.getTileRow(playerList.get(i).getCurrentTile())][Tile.getTileCol(playerList.get(i).getCurrentTile())].detectSnakeOrLadder());
+                    repaint();
+
+                    //this checks to see if the player has reached the end of the board
+                    if(playerList.get(i).getCurrentTile() >= 100){
+                        winner = playerList.get(i);
+                    }
+                }
+            }
+
+            //Now that the winner is detected, moves on to the winner screen
         }
+    }
+
+    //roll die method
+    public void rollDie(){
+
+        dieResult = (int)(Math.random()*6) + 1;
     }
 
     //Abstract methods
