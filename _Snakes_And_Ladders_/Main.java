@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.Timer;
+
 import java.util.*;
 
 public class Main extends JFrame implements WindowListener, MouseListener, ActionListener{
@@ -14,6 +16,8 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     JPanel optionsPanel = new JPanel(new BorderLayout(0,0));
     JPanel gamePanel = new JPanel(new BorderLayout(0,0));
     JLabel boardLabel2 = new JLabel();
+    JLabel roundLabel;
+    JLabel dieResultLabel = new JLabel("Die Result: ");
 
     //Creating a slider to see how many players are playing
     //Source (including the JSlider methods used in this game): https://www.geeksforgeeks.org/java-swing-jslider/
@@ -25,13 +29,16 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     //a large 2d array with all tiles
     Tile[][] tileList = new Tile[10][10];
     final int tile100xPos = 145;
-    final int tile100yPos = 150;
+    final int tile100yPos = 184;
     final int tileSpacing = 56;
     final int playerSize = 30;
     int playerTurn = 1;
     Player winner = null;
-    int gameRound = 0;
+    int gameRound = 1;
     int dieResult;
+    Player currentPlayer;
+    Player nextPlayer;
+    String paintEvent = "Paint Every Player";
 
     //main method used to create panel and an instance of this class to create a panel of the game
     public static void main(String[]args){
@@ -103,6 +110,7 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         titlePanel.setBounds(0,0,frameWidth,frameHeight-35);
         titlePanel.setVisible(true);
         add(titlePanel);
+        validate();
 
         //OPTIONS SCREEN
         JLabel optionsTitle = new JLabel("Choose number of players:");
@@ -158,46 +166,56 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         }
 
         //setting up game title 
-        JLabel roundLabel = new JLabel("Round: " + gameRound);
-        roundLabel.setSize(100,100);
+        roundLabel = new JLabel("Round: " + gameRound);
+        roundLabel.setSize(600,100);
+        roundLabel.setHorizontalAlignment(SwingConstants.LEADING);
+        roundLabel.setFont(new Font("Arial", Font.BOLD, 50));
 
         JLabel playerLabel = new JLabel("Player: ");
-        playerLabel.setSize(100,100);
+        playerLabel.setSize(600,100);
+        playerLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+        playerLabel.setFont(new Font("Arial", Font.BOLD, 50));
         
         JLabel gameInfoLabel = new JLabel();
         gameInfoLabel.setForeground(Color.BLUE);
         gameInfoLabel.setPreferredSize(new Dimension(700,100));
-        gameInfoLabel.add(roundLabel,BorderLayout.WEST);
-        gameInfoLabel.add(playerLabel,BorderLayout.EAST);
+        gameInfoLabel.add(roundLabel);
+        gameInfoLabel.add(playerLabel);
+        gameInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         //setting up die panel
-        JButton rollDie = new JButton("roll die");
+        JButton rollDie = new JButton("Roll Die");
         rollDie.addActionListener(this);
         rollDie.setSize(new Dimension(200,40));
         rollDie.setBackground(Color.BLUE);
 
-        JLabel dieResult = new JLabel("die result");
-        dieResult.setSize(new Dimension(200,40));
+        dieResultLabel.setSize(new Dimension(200,40));
 
         JPanel diePanel = new JPanel();
         diePanel.add(rollDie,BorderLayout.WEST);
-        diePanel.add(dieResult,BorderLayout.EAST);
+        diePanel.add(dieResultLabel,BorderLayout.EAST);
         //sets the height of the jpanel (width does not matter due to BorderLayout)
         diePanel.setSize(new Dimension(800,60));
 
-        gamePanel.add(gameInfoLabel,BorderLayout.PAGE_START);
         gamePanel.add(diePanel,BorderLayout.PAGE_END);
         gamePanel.setBackground(Color.YELLOW);
         gamePanel.add(boardLabel2,BorderLayout.CENTER);
         gamePanel.setBounds(0,0,frameWidth,frameHeight-35);
+        gamePanel.add(gameInfoLabel,BorderLayout.PAGE_START);
         add(gamePanel);
     }
     
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        for(Player player : playerList) {
-            player.paint(g);
+        
+        if(paintEvent.equals("Paint Every Player")){
+            for(Player player : playerList) {
+                player.paint(g);
+            }
+        }
+        else if (paintEvent.equals("Paint Current Player")){
+            currentPlayer.paint(g);
         }
     }
 
@@ -222,40 +240,56 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
                 playerList.add(new Player(i, playerSize));
             }
             //paints every player's tile on the starting tile 
+            paintEvent = "Paint Every Player";
             repaint();
-            
+        }
+
+        if(s.equals("Roll Die")){
             //GAME CODE
             //this runs a game round every loop until there is a winner
-            while (winner == null){
-                //this loop runs a player's turn
-                gameRound++;
-                for (int i = 0;i < NumOfPlayers;i++){
-                    //the player roles the die
-                    rollDie();
+            if(winner == null){
+                try{
+                    currentPlayer = nextPlayer;
+                    nextPlayer = playerList.get(currentPlayer.getPlayerIndex() + 1);
+                }
+                catch(Exception E){
+                    nextPlayer = playerList.get(0);
+                    gameRound++;
+                }
+                roundLabel.setText("Round: " + gameRound);
+                currentPlayer.setSize(50);
+                paintEvent = "Paint Current Player";
+                repaint();
+                currentPlayer.setSize(30);
+                //the player roles the die
+                rollDie();
 
-                    //this moves the player to the new tile after the die was rolled
-                    playerList.get(i).setCurrentTile(playerList.get(i).getCurrentTile() + dieResult);
-                    repaint();
+                //this moves the player to the new tile after the die was rolled
+                currentPlayer.setCurrentTile(currentPlayer.getCurrentTile() + dieResult);
+                paintEvent = "Paint Every Player";
+                repaint();
 
-                    //this paints the player again (paints to a new tile if the player was previously on a snake/ladder tile)
-                    playerList.get(i).setCurrentTile(tileList[Tile.getTileRow(playerList.get(i).getCurrentTile())][Tile.getTileCol(playerList.get(i).getCurrentTile())].detectSnakeOrLadder());
-                    repaint();
+                //this paints the player again (paints to a new tile if the player was previously on a snake/ladder tile)
+                currentPlayer.setCurrentTile(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnakeOrLadder());
+                paintEvent = "Paint Every Player";
+                repaint();
 
-                    //this checks to see if the player has reached the end of the board
-                    if(playerList.get(i).getCurrentTile() >= 100){
-                        winner = playerList.get(i);
-                    }
+                //this checks to see if the player has reached the end of the board
+                if(currentPlayer.getCurrentTile() >= 94){
+                    winner = currentPlayer;
                 }
             }
-
-            //Now that the winner is detected, moves on to the winner screen
+            else{
+                //Now that the winner is detected, moves on to the winner screen
+                //endScreen();
+            }
         }
     }
 
     //roll die method
     public void rollDie(){
-
         dieResult = (int)(Math.random()*6) + 1;
+        dieResultLabel.setText("Die Result: " + dieResult);
     }
 
     //Abstract methods
