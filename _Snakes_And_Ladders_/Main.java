@@ -1,8 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.Timer;
-
 import java.util.*;
 
 public class Main extends JFrame implements WindowListener, MouseListener, ActionListener{
@@ -18,6 +16,7 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     JLabel boardLabel2 = new JLabel();
     JLabel roundLabel;
     JLabel dieResultLabel = new JLabel("Die Result: ");
+    JPanel endPanel = new JPanel(new BorderLayout(0,0));
 
     //Creating a slider to see how many players are playing
     //Source (including the JSlider methods used in this game): https://www.geeksforgeeks.org/java-swing-jslider/
@@ -71,6 +70,7 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         //ensuring that the other panels in the game are not shown
         optionsPanel.setVisible(false);
         gamePanel.setVisible(false);
+        endPanel.setVisible(false);
 
         //TITLE SCREEN
         // JLabel source: https://docs.oracle.com/javase%2F8%2Fdocs%2Fapi%2F%2F/javax/swing/JLabel.html
@@ -239,6 +239,7 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
             for (int i = 1;i <= NumOfPlayers;i++){
                 playerList.add(new Player(i, playerSize));
             }
+            currentPlayer = playerList.get(0);
             //paints every player's tile on the starting tile 
             paintEvent = "Paint Every Player";
             repaint();
@@ -249,10 +250,10 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
             //this runs a game round every loop until there is a winner
             if(winner == null){
                 try{
-                    currentPlayer = nextPlayer;
                     nextPlayer = playerList.get(currentPlayer.getPlayerIndex() + 1);
                 }
                 catch(Exception E){
+                    //if there is no next player in the playerList array, it moves to the next round and the first player goes again
                     nextPlayer = playerList.get(0);
                     gameRound++;
                 }
@@ -264,10 +265,18 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
                 //the player roles the die
                 rollDie();
 
-                //this moves the player to the new tile after the die was rolled
-                currentPlayer.setCurrentTile(currentPlayer.getCurrentTile() + dieResult);
-                paintEvent = "Paint Every Player";
-                repaint();
+                try{
+                    //this moves the player to the new tile after the die was rolled
+                    currentPlayer.setCurrentTile(currentPlayer.getCurrentTile() + dieResult);
+                    paintEvent = "Paint Every Player";
+                    repaint();
+                }
+                catch(Exception e2){
+                    //this code runs when the new tile is not in the tileList
+                    //occurs when the new tile is greater than 100
+                    //this code will tell the program that there is a winner
+                    winner = currentPlayer;
+                }
 
                 //this paints the player again (paints to a new tile if the player was previously on a snake/ladder tile)
                 currentPlayer.setCurrentTile(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnakeOrLadder());
@@ -278,10 +287,11 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
                 if(currentPlayer.getCurrentTile() >= 94){
                     winner = currentPlayer;
                 }
+                currentPlayer = nextPlayer;
             }
             else{
                 //Now that the winner is detected, moves on to the winner screen
-                //endScreen();
+                
             }
         }
     }
