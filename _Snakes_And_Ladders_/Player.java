@@ -12,14 +12,15 @@ public class Player extends Main {
         playerColor = new Color(getRandomColor(),getRandomColor(),getRandomColor());
         this.playerSize = playerSize;
     }
-    public Color getPlayerColor(){
-        return playerColor;
-    }
+
     public int getRandomColor(){
         return (int)(Math.random()*254) + 1;
     }
     public Color getColor(){
         return playerColor;
+    }
+    public void setColor(Color color){
+        playerColor = color;
     }
     public int getCurrentTile(){
         return currentTile;
@@ -34,16 +35,11 @@ public class Player extends Main {
         playerSize = size;
     }
     public void paint(Graphics g){
-        if(playerSize == 30){
-            g.setColor(playerColor);
-            System.out.println(Tile.getTileRow(currentTile));
-            System.out.println(Tile.getTileCol(currentTile));
-            g.fillOval(tileList[Tile.getTileRow(currentTile)][Tile.getTileCol(currentTile)].getXpos() + (3-playerNum)*5,tileList[Tile.getTileRow(currentTile)][Tile.getTileCol(currentTile)].getYpos(),playerSize,playerSize);
-            System.out.println(playerColor);
-        }
-        else if(playerSize == 50){
-            g.setColor(playerColor);
-            g.fillOval(600,100,playerSize,playerSize);
-        }
+        g.setColor(playerColor);
+        g.fillOval(tileList[Tile.getTileRow(currentTile)][Tile.getTileCol(currentTile)].getXpos() + (3-playerNum)*5,tileList[Tile.getTileRow(currentTile)][Tile.getTileCol(currentTile)].getYpos(),playerSize,playerSize);
+    }
+    public void paint(Graphics g,int Xpos, int Ypos){
+        g.setColor(playerColor);
+        g.fillOval(Xpos,Ypos,playerSize,playerSize);
     }
 }

@@ -17,6 +17,7 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     JLabel roundLabel;
     JLabel dieResultLabel = new JLabel("Die Result: ");
     JPanel endPanel = new JPanel(new BorderLayout(0,0));
+    JPanel resultsPanel = new JPanel(new BorderLayout(0,0));
 
     //Creating a slider to see how many players are playing
     //Source (including the JSlider methods used in this game): https://www.geeksforgeeks.org/java-swing-jslider/
@@ -38,6 +39,8 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     Player currentPlayer;
     Player nextPlayer;
     String paintEvent = "Paint Every Player";
+    Player winnerIcon;
+    Player currentPlayerIcon;
 
     //main method used to create panel and an instance of this class to create a panel of the game
     public static void main(String[]args){
@@ -57,7 +60,7 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         
         // For some reason, the dimensions of the frame do not match the variables for setBounds
         // I have experiemented with the offset numbers to match the dimensions of the JFrame and the variables
-        setBounds(100,100,frameHeight,frameWidth);
+        setBounds(50,50,frameHeight,frameWidth);
     }
 
     //all screen's frontend code goes in this method
@@ -209,13 +212,29 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     public void paint(Graphics g){
         super.paint(g);
         
-        if(paintEvent.equals("Paint Every Player")){
+        if(paintEvent.equals("Paint Every Player") && winner == null){
             for(Player player : playerList) {
-                player.paint(g);
+                try{
+                    player.paint(g);
+                }
+                catch(Exception e){
+                    //winning case 1: player > tile 100
+                    //when the player cannot be painted due to being on a tile not on the board (greater than 100)
+                    if (currentPlayer.getPlayerIndex() == 0){
+                        currentPlayer = playerList.get(playerList.size()-1);
+                    }
+                    else{
+                        currentPlayer = playerList.get(currentPlayer.getPlayerIndex()-1);
+                    }
+                    win();
+                }
             }
         }
-        else if (paintEvent.equals("Paint Current Player")){
-            currentPlayer.paint(g);
+        else if (paintEvent.equals("Paint Winner Player")){
+            winnerIcon.paint(g,814/2-playerSize/2,814/2-playerSize/2);
+        }
+        if(currentPlayerIcon != null && winner == null){
+            currentPlayerIcon.paint(g,600,60);
         }
     }
 
@@ -243,6 +262,8 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
             //paints every player's tile on the starting tile 
             paintEvent = "Paint Every Player";
             repaint();
+            currentPlayerIcon = new Player(1,50);
+            currentPlayerIcon.setColor(playerList.get(0).getColor());
         }
 
         if(s.equals("Roll Die")){
@@ -258,42 +279,90 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
                     gameRound++;
                 }
                 roundLabel.setText("Round: " + gameRound);
-                currentPlayer.setSize(50);
+
+                if(currentPlayer.getPlayerIndex()+1 == playerList.size()){
+                    currentPlayerIcon.setColor(playerList.get(0).getColor());
+                }
+                else{
+                    currentPlayerIcon.setColor(playerList.get(currentPlayer.getPlayerIndex() +1).getColor());
+                }
                 paintEvent = "Paint Current Player";
                 repaint();
-                currentPlayer.setSize(30);
+
                 //the player roles the die
                 rollDie();
 
-                try{
-                    //this moves the player to the new tile after the die was rolled
-                    currentPlayer.setCurrentTile(currentPlayer.getCurrentTile() + dieResult);
-                    paintEvent = "Paint Every Player";
-                    repaint();
-                }
-                catch(Exception e2){
-                    //this code runs when the new tile is not in the tileList
-                    //occurs when the new tile is greater than 100
-                    //this code will tell the program that there is a winner
-                    winner = currentPlayer;
-                }
-
-                //this paints the player again (paints to a new tile if the player was previously on a snake/ladder tile)
-                currentPlayer.setCurrentTile(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnakeOrLadder());
+                //this moves the player to the new tile after the die was rolled
+                currentPlayer.setCurrentTile(currentPlayer.getCurrentTile() + dieResult);
                 paintEvent = "Paint Every Player";
                 repaint();
 
-                //this checks to see if the player has reached the end of the board
-                if(currentPlayer.getCurrentTile() >= 94){
-                    winner = currentPlayer;
+                //this paints the player again (paints to a new tile if the player was previously on a snake/ladder tile)
+                try{
+                    currentPlayer.setCurrentTile(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnakeOrLadder());
+                }
+                catch(Exception e3){
+                    //this catch will occur when players roll die that causes their tile to be > 100
+                }
+                paintEvent = "Paint Every Player";
+                repaint();
+
+                //winning case 2: player on tile 100
+                if(currentPlayer.getCurrentTile() == 100){
+                    win();
                 }
                 currentPlayer = nextPlayer;
             }
-            else{
-                //Now that the winner is detected, moves on to the winner screen
-                
-            }
         }
+        if(s.equals("Show results")){
+            winnerIcon = new Player(winner.getPlayerIndex(),100);
+            winnerIcon.setColor(winner.getColor());
+            paintEvent = "Paint Winner Player";
+            repaint();
+
+            endPanel.setVisible(false);
+            resultsPanel.setVisible(true);
+        }
+    }
+
+    //winning screen
+    public void win(){
+        try{
+            winner = playerList.get(currentPlayer.getPlayerIndex());
+        }
+        catch(Exception e){
+            winner = playerList.get(0);
+        }
+
+        JLabel endTitle = new JLabel("The game has ended...");
+        endTitle.setBackground(Color.YELLOW);
+        endTitle.setFont(new Font("Arial", Font.BOLD, 50));
+        endTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        endTitle.setForeground(Color.GREEN.darker());
+
+        JButton endButton = new JButton("Show results");
+        endButton.setPreferredSize(new Dimension(300,100));
+        endButton.addActionListener(this);
+
+        gamePanel.setBackground(Color.YELLOW);
+        endPanel.add(endTitle,BorderLayout.NORTH);
+        endPanel.add(endButton,BorderLayout.SOUTH);
+        endPanel.setBounds(0,0,frameWidth,frameHeight-35);
+        endPanel.setVisible(true);
+        gamePanel.setVisible(false);
+        add(endPanel);
+
+        JLabel resultsTitle = new JLabel("WE HAVE A WINNER!!!");
+        resultsTitle.setBackground(Color.YELLOW);
+        resultsTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        resultsTitle.setFont(new Font("Arial", Font.BOLD, 50));
+        resultsTitle.setForeground(Color.GREEN.darker());
+        resultsPanel.add(resultsTitle,BorderLayout.NORTH);
+        resultsPanel.setVisible(false);
+        resultsPanel.setBounds(0,0,frameWidth,frameHeight-35);
+        add(resultsPanel);
+
+        revalidate();
     }
 
     //roll die method
