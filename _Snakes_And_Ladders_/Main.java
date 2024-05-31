@@ -18,6 +18,10 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     JLabel dieResultLabel = new JLabel("Die Result: ");
     JPanel endPanel = new JPanel(new BorderLayout(0,0));
     JPanel resultsPanel = new JPanel(new BorderLayout(0,0));
+    JButton eventButton = new JButton("Event Button");
+    JButton rollDie = new JButton("Roll Die");
+    JButton movePlayer = new JButton("Ladder/Snake");
+
 
     //Creating a slider to see how many players are playing
     //Source (including the JSlider methods used in this game): https://www.geeksforgeeks.org/java-swing-jslider/
@@ -187,16 +191,20 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         gameInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         //setting up die panel
-        JButton rollDie = new JButton("Roll Die");
         rollDie.addActionListener(this);
         rollDie.setSize(new Dimension(200,40));
-        rollDie.setBackground(Color.BLUE);
+
+        movePlayer.setVisible(false);
+        movePlayer.addActionListener(this);
+        movePlayer.setSize(new Dimension(200,40));
 
         dieResultLabel.setSize(new Dimension(200,40));
 
         JPanel diePanel = new JPanel();
-        diePanel.add(rollDie,BorderLayout.WEST);
+        diePanel.setBackground(Color.YELLOW);
+        diePanel.add(rollDie,BorderLayout.CENTER);
         diePanel.add(dieResultLabel,BorderLayout.EAST);
+        diePanel.add(movePlayer,BorderLayout.WEST);
         //sets the height of the jpanel (width does not matter due to BorderLayout)
         diePanel.setSize(new Dimension(800,60));
 
@@ -232,6 +240,11 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         }
         else if (paintEvent.equals("Paint Winner Player")){
             winnerIcon.paint(g,814/2-playerSize/2,814/2-playerSize/2);
+        }
+        if(paintEvent.equals("Draw Background")){
+            g.setColor(Color.YELLOW);
+            g.fillRect(0,0,frameHeight,frameWidth);
+
         }
         if(currentPlayerIcon != null && winner == null){
             currentPlayerIcon.paint(g,600,60);
@@ -298,12 +311,21 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
                 repaint();
 
                 //this paints the player again (paints to a new tile if the player was previously on a snake/ladder tile)
-                try{
-                    currentPlayer.setCurrentTile(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnakeOrLadder());
+                Player newPlayer = new Player(40,0);
+                newPlayer.setCurrentTile(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnake());
+                if(newPlayer.getCurrentTile() != currentPlayer.getCurrentTile()){
+                    rollDie.setVisible(false);
+                    movePlayer.setText("Climb Ladder");
+                    movePlayer.setVisible(true);
                 }
-                catch(Exception e3){
-                    //this catch will occur when players roll die that causes their tile to be > 100
+                newPlayer.setCurrentTile(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectLadder());
+                if(newPlayer.getCurrentTile() != currentPlayer.getCurrentTile()){
+                    rollDie.setVisible(false);
+                    movePlayer.setText("Slide Down Snake");
+                    movePlayer.setVisible(true);
                 }
+                movePlayer.setVisible(false);
+                rollDie.setVisible(true);
                 paintEvent = "Paint Every Player";
                 repaint();
 
@@ -333,9 +355,10 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         catch(Exception e){
             winner = playerList.get(0);
         }
-
+        
         JLabel endTitle = new JLabel("The game has ended...");
         endTitle.setBackground(Color.YELLOW);
+        repaint();
         endTitle.setFont(new Font("Arial", Font.BOLD, 50));
         endTitle.setHorizontalAlignment(SwingConstants.CENTER);
         endTitle.setForeground(Color.GREEN.darker());
@@ -343,8 +366,8 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         JButton endButton = new JButton("Show results");
         endButton.setPreferredSize(new Dimension(300,100));
         endButton.addActionListener(this);
-
-        gamePanel.setBackground(Color.YELLOW);
+        endPanel.setBackground(Color.YELLOW);
+        repaint();
         endPanel.add(endTitle,BorderLayout.NORTH);
         endPanel.add(endButton,BorderLayout.SOUTH);
         endPanel.setBounds(0,0,frameWidth,frameHeight-35);
@@ -353,16 +376,15 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
         add(endPanel);
 
         JLabel resultsTitle = new JLabel("WE HAVE A WINNER!!!");
-        resultsTitle.setBackground(Color.YELLOW);
+        repaint();
         resultsTitle.setHorizontalAlignment(SwingConstants.CENTER);
         resultsTitle.setFont(new Font("Arial", Font.BOLD, 50));
         resultsTitle.setForeground(Color.GREEN.darker());
+        resultsPanel.setBackground(Color.yellow);
         resultsPanel.add(resultsTitle,BorderLayout.NORTH);
         resultsPanel.setVisible(false);
         resultsPanel.setBounds(0,0,frameWidth,frameHeight-35);
         add(resultsPanel);
-
-        revalidate();
     }
 
     //roll die method

@@ -24,7 +24,33 @@ public class Tile {
     public int getTileNum(){
         return tileNum;
     }
-    public int detectSnakeOrLadder(){
+    public int detectSnake(){
+        //Snake tiles
+        if(tileNum == 28){
+            newTile = 10;
+        }
+        else if(tileNum == 37){
+            newTile = 3;
+        }
+        else if(tileNum == 48){
+            newTile = 16;
+        }
+        else if(tileNum == 75){
+            newTile = 32;
+        }
+        else if(tileNum == 94){
+            newTile = 71;
+        }
+        else if(tileNum == 96){
+            newTile = 42;
+        }
+
+        else {
+            newTile = tileNum;
+        }
+        return newTile;
+    }
+    public int detectLadder(){
         //Ladder tiles
         if(tileNum == 4){
             newTile = 56;
@@ -43,26 +69,6 @@ public class Tile {
         }
         else if(tileNum == 54){
             newTile = 88;
-        }
-
-        //Snake tiles
-        else if(tileNum == 28){
-            newTile = 10;
-        }
-        else if(tileNum == 37){
-            newTile = 3;
-        }
-        else if(tileNum == 48){
-            newTile = 16;
-        }
-        else if(tileNum == 75){
-            newTile = 32;
-        }
-        else if(tileNum == 94){
-            newTile = 71;
-        }
-        else if(tileNum == 96){
-            newTile = 42;
         }
 
         else {
