@@ -4,12 +4,14 @@ import javax.swing.*;
 import java.util.*;
 
 public class Main extends JFrame implements WindowListener, MouseListener, ActionListener{
+    //height and width of frame will not need to be changed during game
     final static int frameHeight = 814;
     final static int frameWidth = 814;
 
+    //Keeping track of the current screen
     String event = "Title Screen";
 
-    // creating seperate panels for different events
+    // creating seperate panels/labels/buttons for different events that need to be accessed globally
     JPanel titlePanel = new JPanel(new BorderLayout(0,0));
     JPanel optionsPanel = new JPanel(new BorderLayout(0,0));
     JPanel gamePanel = new JPanel(new BorderLayout(0,0));
@@ -27,11 +29,14 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     //Source (including the JSlider methods used in this game): https://www.geeksforgeeks.org/java-swing-jslider/
     JSlider slider = new JSlider(1,10,4);
 
-    //GAME VARIABLES
+    //GAME VARIABLES]
+    //default num of players = 4
     int NumOfPlayers = 4;
+    //2d arraylist with players
     ArrayList<Player> playerList = new ArrayList<>();
     //a large 2d array with all tiles
     Tile[][] tileList = new Tile[10][10];
+    //setting the positons for each of the tiles on the screen
     final int tile100xPos = 145;
     final int tile100yPos = 184;
     final int tileSpacing = 56;
@@ -40,21 +45,21 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
     Player winner = null;
     int gameRound = 1;
     int dieResult;
+    //keeping track of the current/next players in every turn
     Player currentPlayer;
     Player nextPlayer;
+    //there will be multiple paint events to see which players to paint
     String paintEvent = "Paint Every Player";
+    //this will be drawn to see which player is the winner player
     Player winnerIcon;
+    //this will be drawn to see which player is the current player
     Player currentPlayerIcon;
 
     //main method used to create panel and an instance of this class to create a panel of the game
     public static void main(String[]args){
+        //main method creates an instance of the class Main
         Main main = new Main();
         main.setFrame();
-    }
-
-    //get tileList method for other classes
-    public Tile[][] tileList(){
-        return tileList;
     }
 
     //this method must be an instance method as an error will occur when the code is placed in the static main method
@@ -283,6 +288,9 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
             //GAME CODE
             //this runs a game round every loop until there is a winner
             if(winner == null){
+                if(gameRound != 1 || playerTurn != 1){
+                    currentPlayer = nextPlayer;
+                }
                 try{
                     nextPlayer = playerList.get(currentPlayer.getPlayerIndex() + 1);
                 }
@@ -311,30 +319,41 @@ public class Main extends JFrame implements WindowListener, MouseListener, Actio
                 repaint();
 
                 //this paints the player again (paints to a new tile if the player was previously on a snake/ladder tile)
-                Player newPlayer = new Player(40,0);
-                newPlayer.setCurrentTile(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnake());
-                if(newPlayer.getCurrentTile() != currentPlayer.getCurrentTile()){
-                    rollDie.setVisible(false);
-                    movePlayer.setText("Climb Ladder");
-                    movePlayer.setVisible(true);
-                }
-                newPlayer.setCurrentTile(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectLadder());
-                if(newPlayer.getCurrentTile() != currentPlayer.getCurrentTile()){
-                    rollDie.setVisible(false);
+                if(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnake() != currentPlayer.getCurrentTile()){
                     movePlayer.setText("Slide Down Snake");
                     movePlayer.setVisible(true);
+                    rollDie.setVisible(false);
+                    repaint();
                 }
-                movePlayer.setVisible(false);
-                rollDie.setVisible(true);
+                else if(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectLadder() != currentPlayer.getCurrentTile()){
+                    movePlayer.setText("Climb Ladder");
+                    movePlayer.setVisible(true);
+                    rollDie.setVisible(false);
+                    repaint();
+                }
+                else{
+                    movePlayer.setVisible(false);
+                }
                 paintEvent = "Paint Every Player";
-                repaint();
 
                 //winning case 2: player on tile 100
                 if(currentPlayer.getCurrentTile() == 100){
                     win();
                 }
-                currentPlayer = nextPlayer;
+                playerTurn++;
             }
+        }
+        if(s.equals("Slide Down Snake")){
+            currentPlayer.setCurrentTile(currentPlayer.detectSnake());
+            repaint();
+            movePlayer.setVisible(false);
+            rollDie.setVisible(true);
+        }
+        if(s.equals("Climb Ladder")){
+            currentPlayer.setCurrentTile(currentPlayer.detectLadder());
+            repaint();
+            movePlayer.setVisible(false);
+            rollDie.setVisible(true);
         }
         if(s.equals("Show results")){
             winnerIcon = new Player(winner.getPlayerIndex(),100);

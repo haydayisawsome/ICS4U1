@@ -9,6 +9,9 @@ public class Tile {
         this.Xpos = Xpos;
         this.Ypos = Ypos;
     }
+    public String toString(){
+        return String.valueOf(tileNum);
+    }
     public void setXpos(int newXpos){
         Xpos = newXpos;
     }
