@@ -1,5 +1,6 @@
 import java.awt.*;
 
+//extending for the tileList variable
 public class Player extends Main {
     //instance variables for every player object
     private Color playerColor;

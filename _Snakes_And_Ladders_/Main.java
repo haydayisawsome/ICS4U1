@@ -54,6 +54,7 @@ public class Main extends JFrame implements WindowListener, ActionListener{
     Player winnerIcon;
     //this will be drawn to see which player is the current player
     Player currentPlayerIcon;
+    //this will keep track of the winner
 
     //main method used to create panel and an instance of this class to create a panel of the game
     public static void main(String[]args){
@@ -239,11 +240,11 @@ public class Main extends JFrame implements WindowListener, ActionListener{
                 catch(Exception e){
                     //winning case 1: player > tile 100
                     //when the player cannot be painted due to being on a tile not on the board (greater than 100)
-                    if (currentPlayer.getPlayerIndex() == 0){
+                    if (nextPlayer.getPlayerIndex() == 0){
                         currentPlayer = playerList.get(playerList.size()-1);
                     }
                     else{
-                        currentPlayer = playerList.get(currentPlayer.getPlayerIndex()-1);
+                        currentPlayer = playerList.get(nextPlayer.getPlayerIndex()-1);
                     }
                     win();
                 }
@@ -300,24 +301,10 @@ public class Main extends JFrame implements WindowListener, ActionListener{
                 if(gameRound != 1 || playerTurn != 1){
                     currentPlayer = nextPlayer;
                 }
-                try{
-                    nextPlayer = playerList.get(currentPlayer.getPlayerIndex() + 1);
-                }
-                catch(Exception E){
-                    //if there is no next player in the playerList array, it moves to the next round and the first player goes again
-                    nextPlayer = playerList.get(0);
-                    gameRound++;
-                }
-                roundLabel.setText("Round: " + gameRound);
+                int nextPlayerIndex = (currentPlayer.getPlayerIndex() + 1) % playerList.size();
+                nextPlayer = playerList.get(nextPlayerIndex);
 
-                //draws the player next to the playerLabel that will move after the dice was rolled
-                if(currentPlayer.getPlayerIndex()+1 == playerList.size()){
-                    currentPlayerIcon.setColor(playerList.get(0).getColor());
-                }
-                else{
-                    //goes back to the first element of the arrayList
-                    currentPlayerIcon.setColor(playerList.get(currentPlayer.getPlayerIndex() +1).getColor());
-                }
+                roundLabel.setText("Round: " + gameRound);
 
                 //the player roles the die
                 rollDie();
@@ -327,23 +314,34 @@ public class Main extends JFrame implements WindowListener, ActionListener{
                 paintEvent = "Paint Every Player";
                 repaint();
 
-                //for the following if statements
-                //Condition: if a snake / ladder was detected on the current square
-                //Code: show the button to move the player up ladder/down snake
-                //      also hide the button to roll die so players cannot skip going down a snake
-                if(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnake() != currentPlayer.getCurrentTile()){
-                    movePlayer.setText("Slide Down Snake");
-                    movePlayer.setVisible(true);
-                    rollDie.setVisible(false);
-                }
-                else if(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectLadder() != currentPlayer.getCurrentTile()){
-                    movePlayer.setText("Climb Ladder");
-                    movePlayer.setVisible(true);
-                    rollDie.setVisible(false);
-                }
-                else{
-                    //if no ladder/snake was detected, ensures the move player button is still not visible
-                    movePlayer.setVisible(false);
+                if(currentPlayer.getCurrentTile() < 100){
+                    //for the following if statements
+                    //Condition: if a snake / ladder was detected on the current square
+                    //Code: show the button to move the player up ladder/down snake
+                    //      also hide the button to roll die so players cannot skip going down a snake
+                    if(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectSnake() != currentPlayer.getCurrentTile()){
+                        movePlayer.setText("Slide Down Snake");
+                        movePlayer.setVisible(true);
+                        rollDie.setVisible(false);
+                    }
+                    else if(tileList[Tile.getTileRow(currentPlayer.getCurrentTile())][Tile.getTileCol(currentPlayer.getCurrentTile())].detectLadder() != currentPlayer.getCurrentTile()){
+                        movePlayer.setText("Climb Ladder");
+                        movePlayer.setVisible(true);
+                        rollDie.setVisible(false);
+                    }
+                    else{
+                        //if no ladder/snake was detected, ensures the move player button is still not visible
+                        movePlayer.setVisible(false);
+
+                        //draws the player next to the playerLabel that will move after the dice was rolled
+                        if(currentPlayer.getPlayerIndex()+1 == playerList.size()){
+                            currentPlayerIcon.setColor(playerList.get(0).getColor());
+                        }
+                        else{
+                            //goes back to the first element of the arrayList
+                            currentPlayerIcon.setColor(playerList.get(currentPlayer.getPlayerIndex() +1).getColor());
+                        }
+                    }
                 }
                 paintEvent = "Paint Every Player";
 
@@ -352,6 +350,12 @@ public class Main extends JFrame implements WindowListener, ActionListener{
                     win();
                 }
                 playerTurn++;
+
+                //detecting if it is the next round
+                if(playerTurn > playerList.size()){
+                    playerTurn = 1;
+                    gameRound++;
+                }
             }
         }
         if(s.equals("Slide Down Snake")){
@@ -360,6 +364,14 @@ public class Main extends JFrame implements WindowListener, ActionListener{
             repaint();
             movePlayer.setVisible(false);
             rollDie.setVisible(true);
+            //draws the player next to the playerLabel that will move after the dice was rolled
+            if(currentPlayer.getPlayerIndex()+1 == playerList.size()){
+                currentPlayerIcon.setColor(playerList.get(0).getColor());
+            }
+            else{
+                //goes back to the first element of the arrayList
+                currentPlayerIcon.setColor(playerList.get(currentPlayer.getPlayerIndex() +1).getColor());
+            }
         }
         if(s.equals("Climb Ladder")){
             //player is repainted at the top of the ladder
@@ -367,6 +379,14 @@ public class Main extends JFrame implements WindowListener, ActionListener{
             repaint();
             movePlayer.setVisible(false);
             rollDie.setVisible(true);
+            //draws the player next to the playerLabel that will move after the dice was rolled
+            if(currentPlayer.getPlayerIndex()+1 == playerList.size()){
+                currentPlayerIcon.setColor(playerList.get(0).getColor());
+            }
+            else{
+                //goes back to the first element of the arrayList
+                currentPlayerIcon.setColor(playerList.get(currentPlayer.getPlayerIndex() +1).getColor());
+            }
         }
         if(s.equals("Show results")){
             //paints the winner player in the middle of the screen
