@@ -1,17 +1,18 @@
 public class Tile {
+    //attributes of each tile
     private int Xpos;
     private int Ypos;
     private int tileNum;
     private int newTile;
 
+    //overloaded constructor
     public Tile(int tileNum,int Xpos,int Ypos){
         this.tileNum = tileNum;
         this.Xpos = Xpos;
         this.Ypos = Ypos;
     }
-    public String toString(){
-        return String.valueOf(tileNum);
-    }
+
+    //setters and getters of class attributes
     public void setXpos(int newXpos){
         Xpos = newXpos;
     }
@@ -27,6 +28,8 @@ public class Tile {
     public int getTileNum(){
         return tileNum;
     }
+
+    //methods to return a new tile if the current tile is a snake/ladder (through tile object)
     public int detectSnake(){
         //Snake tiles
         if(tileNum == 28){
@@ -79,6 +82,8 @@ public class Tile {
         }
         return newTile;
     }
+
+    //two methods used to convert tile object to tile number
     public static int getTileRow(int tile){
         if(tile >= 91){
             return 0;
