@@ -25,7 +25,7 @@ class BankAccount{
     }
 }
 
-public class CheckingAccount extends BankAccount{
+class CheckingAccount extends BankAccount{
     protected String name;
 
     public CheckingAccount(double b,String n){
@@ -51,7 +51,7 @@ public class CheckingAccount extends BankAccount{
     }
 }
 
-class AccountTester {
+public class AccountTester {
     public static void main(String[] args) {
         System.out.println("Mina and Minoo initial balances: ");
         CheckingAccount Mina = new CheckingAccount(1200.6,"Mina");
